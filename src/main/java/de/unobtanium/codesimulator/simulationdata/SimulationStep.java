@@ -1,5 +1,7 @@
 package de.unobtanium.codesimulator.simulationdata;
 
+import org.json.JSONObject;
+
 public abstract class SimulationStep {
 
 	public int id;
@@ -10,6 +12,7 @@ public abstract class SimulationStep {
 		this.time = time;
 	}
 	
-	//public JSONObject getDataAsJSON();
+	
+	public abstract JSONObject asJSONObject();
 	
 }

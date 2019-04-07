@@ -88,13 +88,15 @@ public class App {
 //		}
     	
 
-    	JSONArray consoleOutput = ConsoleOutputExporter.exportConsoleOutput();
+    	JSONArray steps = StepExporter.export();
     	JSONArray nodeData = NodeExporter.exportNodes(codeData);
+//    	JSONArray consoleOutput = ConsoleOutputExporter.exportConsoleOutput();
     	
 
     	JSONObject result = new JSONObject();
-    	result.put("console_output", consoleOutput);
+    	result.put("steps", steps);
     	result.put("node_data", nodeData);
+//    	result.put("console_output", consoleOutput);
     	
     	
     	System.out.println(result.toString());

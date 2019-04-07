@@ -5,9 +5,9 @@ import org.json.JSONObject;
 
 import de.unobtanium.codesimulator.simulationdata.SimulationStep;
 
-public class ConsoleOutputExporter {
+public class StepExporter {
 
-	public static JSONArray exportConsoleOutput() {
+	public static JSONArray export() {
 		
 		JSONArray jsonArray = new JSONArray();
 		

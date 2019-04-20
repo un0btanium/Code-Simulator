@@ -6,6 +6,8 @@ import java.util.List;
 import de.unobtanium.codesimulator.simulationdata.Highlight;
 import de.unobtanium.codesimulator.simulationdata.PrintLineToConsole;
 import de.unobtanium.codesimulator.simulationdata.PrintToConsole;
+import de.unobtanium.codesimulator.simulationdata.ReadString;
+import de.unobtanium.codesimulator.simulationdata.ShowError;
 import de.unobtanium.codesimulator.simulationdata.SimulationStep;
 import de.unobtanium.codesimulator.simulationdata.SolveCalculation;
 
@@ -55,6 +57,15 @@ public class SimulationData {
 	public void print(int id, String message) {
 //		System.out.println("print(" + id + ", " + message + ")");
 		simulationSteps.add(new PrintToConsole(id, getTime(), message));
+	}
+	
+	public void readLine(int id) {
+		simulationSteps.add(new ReadString(id, getTime()));
+		App.exportCurrentState(true);
+	}
+	
+	public void showError(int id, String errorMessage) {
+		simulationSteps.add(new ShowError(id, getTime(), errorMessage));
 	}
 	
 	public void declarePrimitiveVariable(int id, String variableName, String variableType) {

@@ -2,6 +2,7 @@ package de.unobtanium.codesimulator;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,19 +61,14 @@ public class CodeExecuter {
 	private static void executeCode(MemoryClassLoader classLoader) {
 		
 		try {
-			Class.forName("main.Main", true, classLoader).getMethod("main").invoke(new String[0]);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+
+//			String[] parameter = new String[0]; // TODO custom args?
+			Class<?> mainClass = Class.forName("main.Main", true, classLoader);
+			Method mainMethod = mainClass.getMethod("main", new Class[] { String[].class });
+			mainMethod.invoke(null, new Object[] { new String[0] });
+			
+		} catch (Throwable e) { // TODO set error and export error
+			SimulationData.getInstance().showError(-2, e.getStackTrace().toString());
 		}
 	}
 	

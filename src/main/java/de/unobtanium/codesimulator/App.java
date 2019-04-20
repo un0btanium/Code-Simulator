@@ -16,6 +16,8 @@ import de.unobtanium.codesimulator.visitors.ReplaceVisitor;
 
 public class App {
 	
+	private static CodeData codeData;
+	
     public static void main( String[] args ) {
 
     	
@@ -61,7 +63,7 @@ public class App {
     	}
     	
     	// SAVE DATA IN CodeData OBJECT
-    	CodeData codeData = new CodeData(sourceFiles, codeSnippets);
+    	codeData = new CodeData(sourceFiles, codeSnippets);
     	
     	// REGISTER NODES, GIVE THEM UNIQUE IDs AND SAVE THEIR POSITION DATA
     	for (SourceFile sourceFile : sourceFiles) {
@@ -80,14 +82,14 @@ public class App {
 
 		// DEBUG: WRITE COMMANDS TO CONSOLE
 //		for (SimulationStep step : SimulationData.getInstance().simulationSteps) {
-//			if (step instanceof PrintLineToConsole) {
-//				System.out.print(((PrintLineToConsole) step).toString());
-//			} else if (step instanceof PrintToConsole) {
-//				System.out.print(((PrintToConsole) step).toString());
-//			}
+//			System.out.println(step.toString());
 //		}
     	
+    	exportCurrentState(false);
 
+    }
+    
+    public static void exportCurrentState(boolean isReadIn) {
     	JSONArray steps = StepExporter.export();
     	JSONArray nodeData = NodeExporter.exportNodes(codeData);
 //    	JSONArray consoleOutput = ConsoleOutputExporter.exportConsoleOutput();
@@ -96,9 +98,12 @@ public class App {
     	JSONObject result = new JSONObject();
     	result.put("steps", steps);
     	result.put("node_data", nodeData);
+    	result.put("isReadIn", isReadIn);
 //    	result.put("console_output", consoleOutput);
     	
     	
+    	
+
     	System.out.println(result.toString());
     }
     

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.unobtanium.codesimulator.simulationdata.Highlight;
+import de.unobtanium.codesimulator.simulationdata.HighlightValue;
 import de.unobtanium.codesimulator.simulationdata.PrintLineToConsole;
 import de.unobtanium.codesimulator.simulationdata.PrintToConsole;
 import de.unobtanium.codesimulator.simulationdata.ReadString;
@@ -41,6 +42,47 @@ public class SimulationData {
 //		System.out.println("highlight(" + id + ")");
 		simulationSteps.add(new Highlight(id, getTime()));
 	}
+	
+	public int highlight(int id, int value) {
+		simulationSteps.add(new HighlightValue(id, getTime(), value));
+		return value;
+	}
+
+	public long highlight(int id, long value) {
+		simulationSteps.add(new HighlightValue(id, getTime(), value));
+		return value;
+	}
+
+	public short highlight(int id, short value) {
+		simulationSteps.add(new HighlightValue(id, getTime(), value));
+		return value;
+	}
+	
+	public byte highlight(int id, byte value) {
+		simulationSteps.add(new HighlightValue(id, getTime(), value));
+		return value;
+	}
+	
+	public double highlight(int id, double value) {
+		simulationSteps.add(new HighlightValue(id, getTime(), value));
+		return value;
+	}
+	
+	public float highlight(int id, float value) {
+		simulationSteps.add(new HighlightValue(id, getTime(), value));
+		return value;
+	}
+	
+	public String highlight(int id, String value) {
+		simulationSteps.add(new HighlightValue(id, getTime(), value));
+		return value;
+	}
+
+	public char highlight(int id, char value) {
+		simulationSteps.add(new HighlightValue(id, getTime(), value));
+		return value;
+	}
+	
 	
 	
 	public void solveCalculation(int id, String result) {

@@ -205,53 +205,41 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 	
 	@Override
 	public Visitable visit(BinaryExpr n, CodeData arg) {
-		super.visit(n, arg);
-		highlightNode(n, arg);
-		return n;
+//		super.visit(n, arg);
+//		return n;
+		return JavaParser.parseExpression("de.unobtanium.codesimulator.SimulationData.getInstance().highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
 	}
 	
 	
 	
 	@Override
 	public Visitable visit(IntegerLiteralExpr n, CodeData arg) {
-		super.visit(n, arg);
-		highlightNode(n, arg);
-		return n;
+		return JavaParser.parseExpression("de.unobtanium.codesimulator.SimulationData.getInstance().highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
 	}
 	
 	@Override
 	public Visitable visit(DoubleLiteralExpr n, CodeData arg) {
-		super.visit(n, arg);
-		highlightNode(n, arg);
-		return n;
+		return JavaParser.parseExpression("de.unobtanium.codesimulator.SimulationData.getInstance().highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
 	}
 	
 	@Override
 	public Visitable visit(LongLiteralExpr n, CodeData arg) {
-		super.visit(n, arg);
-		highlightNode(n, arg);
-		return n;
+		return JavaParser.parseExpression("de.unobtanium.codesimulator.SimulationData.getInstance().highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
 	}
 	
 	@Override
 	public Visitable visit(CharLiteralExpr n, CodeData arg) {
-		super.visit(n, arg);
-		highlightNode(n, arg);
-		return n;
+		return JavaParser.parseExpression("de.unobtanium.codesimulator.SimulationData.getInstance().highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
 	}
-	
+
 	@Override
 	public Visitable visit(BooleanLiteralExpr n, CodeData arg) {
-		super.visit(n, arg);
-		highlightNode(n, arg);
-		return n;
+		return JavaParser.parseExpression("de.unobtanium.codesimulator.SimulationData.getInstance().highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
 	}
 	
 	@Override
 	public Visitable visit(StringLiteralExpr n, CodeData arg) {
-		super.visit(n, arg);
-		highlightNode(n, arg);
-		return n;
+		return JavaParser.parseExpression("de.unobtanium.codesimulator.SimulationData.getInstance().highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
 	}
 	
 }

@@ -205,7 +205,7 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 	
 	@Override
 	public Visitable visit(BinaryExpr n, CodeData arg) {
-//		super.visit(n, arg);
+		super.visit(n, arg);
 //		return n;
 		return JavaParser.parseExpression("de.unobtanium.codesimulator.SimulationData.getInstance().highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
 	}

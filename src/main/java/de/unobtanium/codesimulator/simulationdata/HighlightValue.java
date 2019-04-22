@@ -78,7 +78,7 @@ public class HighlightValue extends SimulationStep {
 		
 		jsonObj.put("type", "highlightValue");
 		jsonObj.put("id", id);
-		jsonObj.put("type", getType());
+		jsonObj.put("valueType", getType());
 		
 		if (isInt) {
 			jsonObj.put("value", intValue);

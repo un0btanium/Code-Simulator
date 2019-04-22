@@ -12,6 +12,7 @@ public class HighlightValue extends SimulationStep {
 	public float floatValue;
 	public String stringValue;
 	public char charValue;
+	public boolean booleanValue;
 
 	public boolean isInt = false;
 	public boolean isLong = false;
@@ -21,6 +22,7 @@ public class HighlightValue extends SimulationStep {
 	public boolean isFloat = false;
 	public boolean isString = false;
 	public boolean isChar = false;
+	public boolean isBoolean = false;
 	
 	public HighlightValue(int id, long time, int value) {
 		super(id, time);
@@ -70,6 +72,12 @@ public class HighlightValue extends SimulationStep {
 		this.charValue = value;
 	}
 	
+	public HighlightValue(int id, long time, boolean value) {
+		super(id, time);
+		this.isBoolean = true;
+		this.booleanValue = value;
+	}
+	
 	
 	
 	@Override
@@ -96,6 +104,8 @@ public class HighlightValue extends SimulationStep {
 			jsonObj.put("value", stringValue);
 		} else if (isChar) {
 			jsonObj.put("value", charValue);
+		} else if (isBoolean) {
+			jsonObj.put("value", booleanValue);
 		}
 		
 		return jsonObj;
@@ -118,6 +128,8 @@ public class HighlightValue extends SimulationStep {
 			return "String";
 		} else if (isChar) {
 			return "char";
+		} else if (isBoolean) {
+			return "boolean";
 		}
 		return "unknown";
 	}

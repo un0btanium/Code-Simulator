@@ -82,6 +82,11 @@ public class SimulationData {
 		simulationSteps.add(new HighlightValue(id, getTime(), value));
 		return value;
 	}
+
+	public boolean highlight(int id, boolean value) {
+		simulationSteps.add(new HighlightValue(id, getTime(), value));
+		return value;
+	}
 	
 	
 	

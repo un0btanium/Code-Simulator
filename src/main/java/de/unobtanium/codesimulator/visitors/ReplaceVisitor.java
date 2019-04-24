@@ -199,6 +199,7 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 	@Override
 	public Visitable visit(AssignExpr n, CodeData arg) {
 		super.visit(n, arg);
+		n.setValue(JavaParser.parseExpression("de.unobtanium.codesimulator.SimulationData.getInstance().assign(" + arg.getIdOfNode(n) + ", \"" + n.getTarget() + "\", " + n.getValue() + ")"));
 		return n;
 	}
 	

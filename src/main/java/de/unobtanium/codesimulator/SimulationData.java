@@ -3,6 +3,7 @@ package de.unobtanium.codesimulator;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.unobtanium.codesimulator.simulationdata.AssignVariable;
 import de.unobtanium.codesimulator.simulationdata.Highlight;
 import de.unobtanium.codesimulator.simulationdata.HighlightValue;
 import de.unobtanium.codesimulator.simulationdata.PrintLineToConsole;
@@ -90,6 +91,54 @@ public class SimulationData {
 	
 	
 	
+	
+	public int assign(int id, String name, int value) {
+		simulationSteps.add(new AssignVariable(id, getTime(), name, value));
+		return value;
+	}
+
+	public long assign(int id, String name, long value) {
+		simulationSteps.add(new AssignVariable(id, getTime(), name, value));
+		return value;
+	}
+
+	public short assign(int id, String name, short value) {
+		simulationSteps.add(new AssignVariable(id, getTime(), name, value));
+		return value;
+	}
+	
+	public byte assign(int id, String name, byte value) {
+		simulationSteps.add(new AssignVariable(id, getTime(), name, value));
+		return value;
+	}
+	
+	public double assign(int id, String name, double value) {
+		simulationSteps.add(new AssignVariable(id, getTime(), name, value));
+		return value;
+	}
+	
+	public float assign(int id, String name, float value) {
+		simulationSteps.add(new AssignVariable(id, getTime(), name, value));
+		return value;
+	}
+	
+	public String assign(int id, String name, String value) {
+		simulationSteps.add(new AssignVariable(id, getTime(), name, value));
+		return value;
+	}
+
+	public char assign(int id, String name, char value) {
+		simulationSteps.add(new AssignVariable(id, getTime(), name, value));
+		return value;
+	}
+
+	public boolean assign(int id, String name, boolean value) {
+		simulationSteps.add(new AssignVariable(id, getTime(), name, value));
+		return value;
+	}
+	
+	
+	
 	public void solveCalculation(int id, String result) {
 //		System.out.println("solveCalculation(" + id + ", "+ result + ")");
 		simulationSteps.add(new SolveCalculation(id, getTime(), result));
@@ -114,6 +163,7 @@ public class SimulationData {
 	public void showError(int id, String errorMessage) {
 		simulationSteps.add(new ShowError(id, getTime(), errorMessage));
 	}
+
 	
 	public void declarePrimitiveVariable(int id, String variableName, String variableType) {
 		

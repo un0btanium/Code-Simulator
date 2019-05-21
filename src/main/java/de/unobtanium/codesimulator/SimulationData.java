@@ -3,9 +3,12 @@ package de.unobtanium.codesimulator;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
+
 import de.unobtanium.codesimulator.simulationdata.AssignVariable;
 import de.unobtanium.codesimulator.simulationdata.Highlight;
 import de.unobtanium.codesimulator.simulationdata.HighlightValue;
+import de.unobtanium.codesimulator.simulationdata.HtmlGui;
 import de.unobtanium.codesimulator.simulationdata.PrintLineToConsole;
 import de.unobtanium.codesimulator.simulationdata.PrintToConsole;
 import de.unobtanium.codesimulator.simulationdata.ReadString;
@@ -135,6 +138,16 @@ public class SimulationData {
 	public boolean assign(int id, String name, boolean value) {
 		simulationSteps.add(new AssignVariable(id, getTime(), name, value));
 		return value;
+	}
+	
+	
+	
+	public void showHtmlGui(JSONArray gui) {
+		int id = -1;
+		if (simulationSteps.size() > 0) {
+			id = simulationSteps.get(simulationSteps.size()-1).id;
+		}
+		simulationSteps.add(new HtmlGui(id, getTime(), gui));
 	}
 	
 	

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -92,19 +93,27 @@ public class App {
     public static void exportCurrentState(boolean isReadIn) {
     	JSONArray steps = StepExporter.export();
     	JSONArray nodeData = NodeExporter.exportNodes(codeData);
-//    	JSONArray consoleOutput = ConsoleOutputExporter.exportConsoleOutput();
     	
 
     	JSONObject result = new JSONObject();
     	result.put("steps", steps);
     	result.put("node_data", nodeData);
     	result.put("isReadIn", isReadIn);
-//    	result.put("console_output", consoleOutput);
     	
-    	
-    	
-
     	System.out.println(result.toString());
     }
+
+	public static void exportCurrentStateGui() {
+    	JSONArray steps = StepExporter.export();
+    	JSONArray nodeData = NodeExporter.exportNodes(codeData);
+    	
+
+    	JSONObject result = new JSONObject();
+    	result.put("steps", steps);
+    	result.put("node_data", nodeData);
+    	result.put("isGuiReadIn", true);
+    	
+    	System.out.println(result.toString());
+	}
     
 }

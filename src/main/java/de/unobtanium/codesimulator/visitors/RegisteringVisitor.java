@@ -13,7 +13,7 @@ import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
-import de.unobtanium.codesimulator.CodeData;
+import de.unobtanium.codesimulator.codedata.CodeData;
 
 public class RegisteringVisitor extends VoidVisitorAdapter<CodeData> {
 	

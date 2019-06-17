@@ -1,13 +1,13 @@
-package de.unobtanium.codesimulator.simulationdata;
+package de.unobtanium.codesimulator.steps;
 
 import org.json.JSONObject;
 
-public abstract class SimulationStep {
+public abstract class Step {
 
 	public int id;
 	public long time;
 	
-	public SimulationStep(int id, long time) {
+	public Step(int id, long time) {
 		this.id = id;
 		this.time = time;
 	}

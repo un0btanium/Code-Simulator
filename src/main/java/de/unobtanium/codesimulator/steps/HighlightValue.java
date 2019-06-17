@@ -1,10 +1,8 @@
-package de.unobtanium.codesimulator.simulationdata;
+package de.unobtanium.codesimulator.steps;
 
 import org.json.JSONObject;
 
-public class AssignVariable extends SimulationStep {
-	
-	public String variableName;
+public class HighlightValue extends Step {
 	
 	public int intValue;
 	public long longValue;
@@ -26,67 +24,56 @@ public class AssignVariable extends SimulationStep {
 	public boolean isChar = false;
 	public boolean isBoolean = false;
 	
-	// TODO different operators!
-	
-	public AssignVariable(int id, long time, String variableName, int value) {
+	public HighlightValue(int id, long time, int value) {
 		super(id, time);
-		this.variableName = variableName;
 		this.isInt = true;
 		this.intValue = value;
 	}
 	
-	public AssignVariable(int id, long time, String variableName, long value) {
+	public HighlightValue(int id, long time, long value) {
 		super(id, time);
-		this.variableName = variableName;
 		this.isLong = true;
 		this.longValue = value;
 	}
 	
-	public AssignVariable(int id, long time, String variableName, short value) {
+	public HighlightValue(int id, long time, short value) {
 		super(id, time);
-		this.variableName = variableName;
 		this.isShort = true;
 		this.shortValue = value;
 	}
 	
-	public AssignVariable(int id, long time, String variableName, byte value) {
+	public HighlightValue(int id, long time, byte value) {
 		super(id, time);
-		this.variableName = variableName;
 		this.isByte = true;
 		this.byteValue = value;
 	}
 	
-	public AssignVariable(int id, long time, String variableName, double value) {
+	public HighlightValue(int id, long time, double value) {
 		super(id, time);
-		this.variableName = variableName;
 		this.isDouble = true;
 		this.doubleValue = value;
 	}
 	
-	public AssignVariable(int id, long time, String variableName, float value) {
+	public HighlightValue(int id, long time, float value) {
 		super(id, time);
-		this.variableName = variableName;
 		this.isFloat = true;
 		this.floatValue = value;
 	}
 	
-	public AssignVariable(int id, long time, String variableName, String value) {
+	public HighlightValue(int id, long time, String value) {
 		super(id, time);
-		this.variableName = variableName;
 		this.isString = true;
 		this.stringValue = value;
 	}
 
-	public AssignVariable(int id, long time, String variableName, char value) {
+	public HighlightValue(int id, long time, char value) {
 		super(id, time);
-		this.variableName = variableName;
 		this.isChar = true;
 		this.charValue = value;
 	}
 	
-	public AssignVariable(int id, long time, String variableName, boolean value) {
+	public HighlightValue(int id, long time, boolean value) {
 		super(id, time);
-		this.variableName = variableName;
 		this.isBoolean = true;
 		this.booleanValue = value;
 	}
@@ -97,9 +84,8 @@ public class AssignVariable extends SimulationStep {
 	public JSONObject asJSONObject() {
 		JSONObject jsonObj = new JSONObject();
 		
-		jsonObj.put("type", "variableAssignment");
+		jsonObj.put("type", "highlightValue");
 		jsonObj.put("id", id);
-		jsonObj.put("name", variableName);
 		jsonObj.put("valueType", getType());
 		
 		if (isInt) {

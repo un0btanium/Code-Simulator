@@ -1,7 +1,6 @@
 package de.unobtanium.codesimulator;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +11,12 @@ import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.ToolProvider;
 
+import de.unobtanium.codesimulator.codedata.CodeData;
+import de.unobtanium.codesimulator.codedata.SourceFile;
 import de.unobtanium.codesimulator.compilerapi.MemoryClassLoader;
 import de.unobtanium.codesimulator.compilerapi.MemoryJavaFileManager;
 import de.unobtanium.codesimulator.compilerapi.StringJavaFileObject;
+import de.unobtanium.codesimulator.steps.StepCollection;
 
 public class CodeExecuter {
 	
@@ -68,7 +70,7 @@ public class CodeExecuter {
 			mainMethod.invoke(null, new Object[] { new String[0] });
 			
 		} catch (Throwable e) { // TODO set error and export error
-			SimulationData.getInstance().showError(-2, e.getStackTrace().toString());
+			StepCollection.getInstance().showError(-2, e.getStackTrace().toString());
 		}
 	}
 	

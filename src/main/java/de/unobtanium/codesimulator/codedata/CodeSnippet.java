@@ -1,4 +1,4 @@
-package de.unobtanium.codesimulator;
+package de.unobtanium.codesimulator.codedata;
 
 public class CodeSnippet {
 	

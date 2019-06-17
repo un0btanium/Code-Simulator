@@ -1,19 +1,19 @@
-package de.unobtanium.codesimulator.simulationdata;
+package de.unobtanium.codesimulator.steps;
 
 import org.json.JSONObject;
 
-public class PrintLineToConsole extends SimulationStep {
+public class PrintToConsole extends Step {
 
 	public String message;
 	
-	public PrintLineToConsole(int id, long time, String message) {
+	public PrintToConsole(int id, long time, String message) {
 		super(id, time);
-		this.message = message + "\n";
+		this.message = message;
 	}
 	
 	@Override
 	public String toString() {
-		return "PrintLineToConsole: " + id + " " + time + " " + message;
+		return "PrintToConsole: " + id + " " + time + " " + message;
 	}
 	
 	@Override
@@ -24,5 +24,4 @@ public class PrintLineToConsole extends SimulationStep {
 		jsonObj.put("msg", message);
 		return jsonObj;
 	}
-	
 }

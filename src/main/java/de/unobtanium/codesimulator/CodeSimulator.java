@@ -4,18 +4,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import de.unobtanium.codesimulator.simulationdata.PrintLineToConsole;
-import de.unobtanium.codesimulator.simulationdata.PrintToConsole;
-import de.unobtanium.codesimulator.simulationdata.SimulationStep;
+import de.unobtanium.codesimulator.codedata.CodeData;
+import de.unobtanium.codesimulator.codedata.CodeSnippet;
+import de.unobtanium.codesimulator.codedata.SourceFile;
+import de.unobtanium.codesimulator.exporter.NodeExporter;
+import de.unobtanium.codesimulator.exporter.StepExporter;
 import de.unobtanium.codesimulator.visitors.RegisteringVisitor;
 import de.unobtanium.codesimulator.visitors.ReplaceVisitor;
 
-public class App {
+public class CodeSimulator {
 	
 	private static CodeData codeData;
 	
@@ -92,7 +93,7 @@ public class App {
     
     public static void exportCurrentState(boolean isReadIn) {
     	JSONArray steps = StepExporter.export();
-    	JSONArray nodeData = NodeExporter.exportNodes(codeData);
+    	JSONArray nodeData = NodeExporter.export(codeData);
     	
 
     	JSONObject result = new JSONObject();
@@ -105,7 +106,7 @@ public class App {
 
 	public static void exportCurrentStateGui() {
     	JSONArray steps = StepExporter.export();
-    	JSONArray nodeData = NodeExporter.exportNodes(codeData);
+    	JSONArray nodeData = NodeExporter.export(codeData);
     	
 
     	JSONObject result = new JSONObject();

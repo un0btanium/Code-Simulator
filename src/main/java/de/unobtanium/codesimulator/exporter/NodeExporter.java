@@ -1,11 +1,13 @@
-package de.unobtanium.codesimulator;
+package de.unobtanium.codesimulator.exporter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import de.unobtanium.codesimulator.codedata.CodeData;
+
 public class NodeExporter {
 
-	public static JSONArray exportNodes(CodeData codeData) {
+	public static JSONArray export(CodeData codeData) {
 		
 		JSONObject jsonObj = new JSONObject();
 		JSONArray jsonArray = new JSONArray();

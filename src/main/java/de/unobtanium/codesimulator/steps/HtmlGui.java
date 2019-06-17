@@ -1,9 +1,9 @@
-package de.unobtanium.codesimulator.simulationdata;
+package de.unobtanium.codesimulator.steps;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class HtmlGui extends SimulationStep {
+public class HtmlGui extends Step {
 	
 	private JSONArray gui;
 	

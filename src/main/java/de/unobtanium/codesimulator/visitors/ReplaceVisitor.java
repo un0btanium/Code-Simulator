@@ -3,7 +3,6 @@ package de.unobtanium.codesimulator.visitors;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
@@ -22,38 +21,36 @@ import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
-import com.github.javaparser.ast.stmt.ForStmt;
-import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.visitor.ModifierVisitor;
 import com.github.javaparser.ast.visitor.Visitable;
 
-import de.unobtanium.codesimulator.CodeData;
+import de.unobtanium.codesimulator.codedata.CodeData;
 
 public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 	
 
-	private int tempVarCounter = 0;
-	private String currentVariableName = "unset";
+//	private int tempVarCounter = 0;
+//	private String currentVariableName = "unset";
 	
 	private Map<Integer, Integer> offset = new HashMap<>();
 	
 
-	private String getNewTempVarName() {
-		currentVariableName = "codeSimulatorTempVariable" + tempVarCounter;
-		tempVarCounter++;
-		return currentVariableName;
-	}
-	
-	private String getCurrentTempVarName() {
-		return currentVariableName;
-	}
+//	private String getNewTempVarName() {
+//		currentVariableName = "codeSimulatorTempVariable" + tempVarCounter;
+//		tempVarCounter++;
+//		return currentVariableName;
+//	}
+//	
+//	private String getCurrentTempVarName() {
+//		return currentVariableName;
+//	}
 	
 	private void insertStatements(Node n, CodeData codeData, boolean isPlacedBeforeNode, String... statements) {
 		
 		Node previousNode = null;
 		Node node = n;
 		
-		while (!(node instanceof BlockStmt)) { // TODO does this found block statements if braces are not written?
+		while (!(node instanceof BlockStmt)) { // TODO check if this does find block statements if braces are not written
 			previousNode = node;
 			node = node.getParentNode().get();
 			if (node instanceof CompilationUnit) {
@@ -70,27 +67,21 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 		
 		int i = ((isPlacedBeforeNode) ? 0 : 1) + offset.get(blockStmtID);
 		for (String statement : statements) {
-			blockStmt.addStatement(index+i++, JavaParser.parseStatement(statement));
+			if (statement.startsWith(".")) {
+				blockStmt.addStatement(index+i++, JavaParser.parseStatement("de.unobtanium.codesimulator.steps.StepCollection.getInstance()" + statement));
+			} else {
+				blockStmt.addStatement(index+i++, JavaParser.parseStatement(statement));
+			}
 		}
 		
 	}
 	
-	private void declareVariable(VariableDeclarationExpr n, CodeData codeData) {
-		for (VariableDeclarator varDec : n.getVariables()) {
-			if (varDec.getType().isPrimitiveType()) {
-				if (varDec.getInitializer().isPresent()) {
-					insertStatements(n, codeData, true, "SimulationData.instance.initializePrimitiveVariable(" + codeData.getIdOfNode(n) + ", \"" + varDec.getNameAsString() + "\", \"" + varDec.getTypeAsString() + "\", \"\" + (" + varDec.getInitializer().get() + "));");
-				} else {
-					insertStatements(n, codeData, true, "SimulationData.instance.declarePrimitiveVariable(" + codeData.getIdOfNode(n) + ", \"" + varDec.getNameAsString() + "\", \"" + varDec.getTypeAsString() + "\");");
-				}
-			} else {
-				System.err.println("No object declaration handling yet! In 'delcareVariable(VariableDeclarationExpr n, CodeData codeData)'");
-			}
+	private Expression replaceExpression(String expression) {
+		if (expression.startsWith(".")) {
+			return JavaParser.parseExpression("de.unobtanium.codesimulator.steps.StepCollection.getInstance()" + expression);
+		} else {
+			return JavaParser.parseExpression(expression);
 		}
-	}
-	
-	private void highlightNode(Node n, CodeData codeData) {
-		insertStatements(n, codeData, true, "de.unobtanium.codesimulator.SimulationData.getInstance().highlight("+ codeData.getIdOfNode(n) + ");");
 	}
 	
 	
@@ -103,7 +94,7 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
         if (children.size() > 0) {
         	String childString = children.get(0).toString();
         	
-        	if (childString.equals("de.unobtanium.codesimulator.SimulationData")) {
+        	if (childString.equals("de.unobtanium.codesimulator.steps.StepCollection")) {
         		return n;
         	}
         	
@@ -115,23 +106,23 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 					super.visit(n, arg);
 					
 					if (n.getArguments().size() == 0) {
-						return JavaParser.parseExpression("de.unobtanium.codesimulator.SimulationData.getInstance().println(" + arg.getIdOfNode(n) + ", \"\")");
+						return replaceExpression(".println(" + arg.getIdOfNode(n) + ", \"\")");
 					} else {
-						return JavaParser.parseExpression("de.unobtanium.codesimulator.SimulationData.getInstance().println(" + arg.getIdOfNode(n) + ", \"\" + (" + n.getArguments().get(0) + "))");
+						return replaceExpression(".println(" + arg.getIdOfNode(n) + ", \"\" + (" + n.getArguments().get(0) + "))");
 					}
 					
 				} else if (n.getNameAsString().equals("print")) {
 					super.visit(n, arg);
 		
 					if (n.getArguments().size() == 0) {
-						return JavaParser.parseExpression("de.unobtanium.codesimulator.SimulationData.getInstance().print(" + arg.getIdOfNode(n) + ", \"\")");
+						return replaceExpression(".print(" + arg.getIdOfNode(n) + ", \"\")");
 					} else {
-						return JavaParser.parseExpression("de.unobtanium.codesimulator.SimulationData.getInstance().print(" + arg.getIdOfNode(n) + ", \"\" + (" + n.getArguments().get(0) + "))");
+						return replaceExpression(".print(" + arg.getIdOfNode(n) + ", \"\" + (" + n.getArguments().get(0) + "))");
 					}
 				}
         	} else if (childString.equals("new Scanner(System.in)")) { // Todo check if type is a java.util.Scanner instead
         		if (n.getNameAsString().equals("nextLine")) {
-        			insertStatements(n, arg, true, "de.unobtanium.codesimulator.SimulationData.getInstance().readLine(" + arg.getIdOfNode(n) + ");");
+        			insertStatements(n, arg, true, ".readLine(" + arg.getIdOfNode(n) + ");");
         		}
         		// TODO .nextInt()
         		// TODO .nextDouble()
@@ -157,7 +148,7 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 //        // TODO find pos of forstmt min node list
 //        
 //        String tempVarName = getNewTempVarName();
-//        insertStatements(n, arg, true, "", "de.unobtanium.codesimulator.SimulationData.getInstance().highlight("+ codeData.getIdOfNode(n) + ");");
+//        insertStatements(n, arg, true, "", ".highlight("+ codeData.getIdOfNode(n) + ");");
 //        
 //        
 //
@@ -176,17 +167,31 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 //		return n;
 //	}
 	
-    private <N extends Node> NodeList<N> modifyList(NodeList<N> list, CodeData arg) {
+    @SuppressWarnings({ "unchecked", "unused" })
+	private <N extends Node> NodeList<N> modifyList(NodeList<N> list, CodeData arg) {
         return (NodeList<N>) list.accept(this, arg);
     }
-
-    private <N extends Node> NodeList<N> modifyList(Optional<NodeList<N>> list, CodeData arg) {
-        return list.map(ns -> modifyList(ns, arg)).orElse(null);
-    }
+    
+//	private <N extends Node> NodeList<N> modifyList(Optional<NodeList<N>> list, CodeData arg) {
+//        return list.map(ns -> modifyList(ns, arg)).orElse(null);
+//    }
 	
 	@Override
 	public Visitable visit(VariableDeclarationExpr n, CodeData arg) {
 		super.visit(n, arg);
+		
+//		for (VariableDeclarator varDec : n.getVariables()) {
+//			if (varDec.getType().isPrimitiveType()) {
+//				if (varDec.getInitializer().isPresent()) {
+//					insertStatements(n, arg, true, ".initializePrimitiveVariable(" + arg.getIdOfNode(n) + ", \"" + varDec.getNameAsString() + "\", \"" + varDec.getTypeAsString() + "\", \"\" + (" + varDec.getInitializer().get() + "));");
+//				} else {
+//					insertStatements(n, arg, true, ".instance.declarePrimitiveVariable(" + arg.getIdOfNode(n) + ", \"" + varDec.getNameAsString() + "\", \"" + varDec.getTypeAsString() + "\");");
+//				}
+//			} else {
+//				System.err.println("No object declaration handling yet! In 'ReplaceVisitor.visit(VariableDeclarationExpr n, CodeData arg)'");
+//			}
+//		}
+		
 		return n;
 	}
 	
@@ -199,7 +204,7 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 	@Override
 	public Visitable visit(AssignExpr n, CodeData arg) {
 		super.visit(n, arg);
-		n.setValue(JavaParser.parseExpression("de.unobtanium.codesimulator.SimulationData.getInstance().assign(" + arg.getIdOfNode(n) + ", \"" + n.getTarget() + "\", " + n.getValue() + ")"));
+		n.setValue(replaceExpression(".assign(" + arg.getIdOfNode(n) + ", \"" + n.getTarget() + "\", " + n.getValue() + ")"));
 		return n;
 	}
 	
@@ -208,39 +213,39 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 	public Visitable visit(BinaryExpr n, CodeData arg) {
 		super.visit(n, arg);
 //		return n;
-		return JavaParser.parseExpression("de.unobtanium.codesimulator.SimulationData.getInstance().highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
+		return replaceExpression(".highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
 	}
 	
 	
 	
 	@Override
 	public Visitable visit(IntegerLiteralExpr n, CodeData arg) {
-		return JavaParser.parseExpression("de.unobtanium.codesimulator.SimulationData.getInstance().highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
+		return replaceExpression(".highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
 	}
 	
 	@Override
 	public Visitable visit(DoubleLiteralExpr n, CodeData arg) {
-		return JavaParser.parseExpression("de.unobtanium.codesimulator.SimulationData.getInstance().highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
+		return replaceExpression(".highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
 	}
 	
 	@Override
 	public Visitable visit(LongLiteralExpr n, CodeData arg) {
-		return JavaParser.parseExpression("de.unobtanium.codesimulator.SimulationData.getInstance().highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
+		return replaceExpression(".highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
 	}
 	
 	@Override
 	public Visitable visit(CharLiteralExpr n, CodeData arg) {
-		return JavaParser.parseExpression("de.unobtanium.codesimulator.SimulationData.getInstance().highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
+		return replaceExpression(".highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
 	}
 
 	@Override
 	public Visitable visit(BooleanLiteralExpr n, CodeData arg) {
-		return JavaParser.parseExpression("de.unobtanium.codesimulator.SimulationData.getInstance().highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
+		return replaceExpression(".highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
 	}
 	
 	@Override
 	public Visitable visit(StringLiteralExpr n, CodeData arg) {
-		return JavaParser.parseExpression("de.unobtanium.codesimulator.SimulationData.getInstance().highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
+		return replaceExpression(".highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
 	}
 	
 }

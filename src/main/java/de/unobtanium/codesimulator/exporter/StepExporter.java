@@ -1,9 +1,10 @@
-package de.unobtanium.codesimulator;
+package de.unobtanium.codesimulator.exporter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import de.unobtanium.codesimulator.simulationdata.SimulationStep;
+import de.unobtanium.codesimulator.steps.Step;
+import de.unobtanium.codesimulator.steps.StepCollection;
 
 public class StepExporter {
 
@@ -12,12 +13,17 @@ public class StepExporter {
 		JSONArray jsonArray = new JSONArray();
 		
 		long previousTime = 0;
-		int size = SimulationData.getInstance().simulationSteps.size();
+		int size = StepCollection.getInstance().steps.size();
 		int i = 1;
-		for (SimulationStep step : SimulationData.getInstance().simulationSteps) {
+		for (Step step : StepCollection.getInstance().steps) {
 			JSONObject jsonObj = step.asJSONObject();
-			jsonObj.put("delay", step.time-previousTime);
+			
+			long delay = step.time-previousTime;
+			if (jsonObj.getString("type").equals("console")) {
+				delay = 4;
+			}
 			previousTime = step.time;
+			jsonObj.put("delay", delay);
 			
 			// mark read command as already executed
 			if (jsonObj.getString("type").equals("readString")) {

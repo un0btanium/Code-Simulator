@@ -1,8 +1,8 @@
-package de.unobtanium.codesimulator.simulationdata;
+package de.unobtanium.codesimulator.steps;
 
 import org.json.JSONObject;
 
-public class ShowError extends SimulationStep {
+public class ShowError extends Step {
 	
 	private String errorMessage;
 	

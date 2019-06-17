@@ -1,8 +1,8 @@
-package de.unobtanium.codesimulator.simulationdata;
+package de.unobtanium.codesimulator.steps;
 
 import org.json.JSONObject;
 
-public class SolveCalculation extends SimulationStep {
+public class SolveCalculation extends Step {
 	
 	private String result;
 	

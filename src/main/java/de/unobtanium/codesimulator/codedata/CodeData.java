@@ -1,4 +1,4 @@
-package de.unobtanium.codesimulator;
+package de.unobtanium.codesimulator.codedata;
 
 import java.util.HashMap;
 import java.util.List;
@@ -8,11 +8,11 @@ import com.github.javaparser.ast.Node;
 
 public class CodeData {
 
-	List<SourceFile> sourceFiles;
-	Map<String, CodeSnippet> codeSnippets;
+	public List<SourceFile> sourceFiles;
+	public Map<String, CodeSnippet> codeSnippets;
 	
-	Map<Integer, NodeData> nodesByID;
-	int nodeIDcounter;
+	public Map<Integer, NodeData> nodesByID;
+	private int nodeIDcounter;
 	
 	public CodeData(List<SourceFile> sourceFiles, Map<String, CodeSnippet> codeSnippets) {
 		this.sourceFiles = sourceFiles;

@@ -5,10 +5,10 @@ import java.util.Scanner;
 
 import org.json.JSONArray;
 
-import de.unobtanium.codesimulator.App;
-import de.unobtanium.codesimulator.SimulationData;
+import de.unobtanium.codesimulator.CodeSimulator;
+import de.unobtanium.codesimulator.steps.StepCollection;
 
-public class GraphicalUserInterface {
+public class GUI {
 	
 	private static ArrayList<ArrayList<GUIElement>> guiElements;
 	private static int rowIndex;
@@ -37,7 +37,7 @@ public class GraphicalUserInterface {
 			}
 			jsonArrayRows.put(jsonArrayColumns);
 		}
-		SimulationData.getInstance().showHtmlGui(jsonArrayRows);
+		StepCollection.getInstance().showHtmlGui(jsonArrayRows);
 		reset();
 	}
 
@@ -50,9 +50,9 @@ public class GraphicalUserInterface {
 			}
 			jsonArrayRows.put(jsonArrayColumns);
 		}
-		SimulationData.getInstance().showHtmlGui(jsonArrayRows);
+		StepCollection.getInstance().showHtmlGui(jsonArrayRows);
 		reset();
-		App.exportCurrentStateGui();
+		CodeSimulator.exportCurrentStateGui();
 		Scanner scanner = new Scanner(System.in);
     	try {
         	return scanner.nextInt();

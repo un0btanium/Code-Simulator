@@ -1,4 +1,4 @@
-package de.unobtanium.codesimulator;
+package de.unobtanium.codesimulator.codedata;
 
 import java.util.Map;
 
@@ -8,11 +8,11 @@ import com.github.javaparser.ast.CompilationUnit;
 public class SourceFile {
 	
 	
-	String packageString;
-	String className;
-	String code;
+	public String packageString;
+	public String className;
+	public String code;
 	
-	CompilationUnit cu;
+	public CompilationUnit cu;
 	
 	public SourceFile(String packageString, String className, String code, Map<String, CodeSnippet> codeSnippets) {
 		this.packageString = packageString;

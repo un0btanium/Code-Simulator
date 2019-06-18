@@ -18,6 +18,7 @@ public class DeclarePrimitiveVariable extends Step {
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("type", "declarePrimitiveVariable");
 		jsonObj.put("id", id);
+		jsonObj.put("action", "Variable Declaration");
 		jsonObj.put("name", variableName);
 		jsonObj.put("valueType", variableType);
 		return jsonObj;

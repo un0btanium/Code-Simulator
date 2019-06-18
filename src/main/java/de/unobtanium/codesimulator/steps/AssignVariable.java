@@ -178,6 +178,7 @@ public class AssignVariable extends Step {
 		
 		jsonObj.put("type", "variableAssignment");
 		jsonObj.put("id", id);
+		jsonObj.put("action", "Variable Assignment");
 		jsonObj.put("name", variableName);
 		jsonObj.put("valueType", getType());
 		

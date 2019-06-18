@@ -16,6 +16,7 @@ public class SolveCalculation extends Step {
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("type", "calculation");
 		jsonObj.put("id", id);
+		jsonObj.put("action", "Arithmetic Operation");
 		jsonObj.put("res", result);
 		return jsonObj;
 	}

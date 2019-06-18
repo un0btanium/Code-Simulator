@@ -17,6 +17,7 @@ public class HtmlGui extends Step {
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("type", "htmlGui");
 		jsonObj.put("id", id);
+		jsonObj.put("action", "Method Call");
 		jsonObj.put("guiElements", gui);
 		return jsonObj;
 	}

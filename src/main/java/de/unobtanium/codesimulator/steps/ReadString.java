@@ -13,6 +13,7 @@ public class ReadString extends Step {
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("type", "readString");
 		jsonObj.put("id", id);
+		jsonObj.put("action", "Method Call");
 		return jsonObj;
 	}
 	

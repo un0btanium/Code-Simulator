@@ -87,11 +87,96 @@ public class StepCollection {
 		return value;
 	}
 	
+	
 	public Object highlightNull(int id) {
 		steps.add(new HighlightValue(id, getTime()));
 		return null;
 	}
 	
+	
+	
+	public String highlightBinaryExpression(int id, String operator, String value) {
+		steps.add(new HighlightBinaryExpression(id, getTime(), operator, value));
+		return value;
+	}
+	
+	public int highlightBinaryExpression(int id, String operator, int value) {
+		steps.add(new HighlightBinaryExpression(id, getTime(), operator, value));
+		return value;
+	}
+	
+	public double highlightBinaryExpression(int id, String operator, double value) {
+		steps.add(new HighlightBinaryExpression(id, getTime(), operator, value));
+		return value;
+	}
+
+	public boolean highlightBinaryExpression(int id, String operator, boolean value) {
+		steps.add(new HighlightBinaryExpression(id, getTime(), operator, value));
+		return value;
+	}
+	
+	public float highlightBinaryExpression(int id, String operator, float value) {
+		steps.add(new HighlightBinaryExpression(id, getTime(), operator, value));
+		return value;
+	}
+
+	public char highlightBinaryExpression(int id, String operator, char value) {
+		steps.add(new HighlightBinaryExpression(id, getTime(), operator, value));
+		return value;
+	}
+
+	public long highlightBinaryExpression(int id, String operator, long value) {
+		steps.add(new HighlightBinaryExpression(id, getTime(), operator, value));
+		return value;
+	}
+
+	public short highlightBinaryExpression(int id, String operator, short value) {
+		steps.add(new HighlightBinaryExpression(id, getTime(), operator, value));
+		return value;
+	}
+	
+	public byte highlightBinaryExpression(int id, String operator, byte value) {
+		steps.add(new HighlightBinaryExpression(id, getTime(), operator, value));
+		return value;
+	}
+	
+	
+	
+	
+	public int highlightUnaryExpression(int id, boolean isPostfix, int valueBefore, int valueAfter, int value) {
+		steps.add(new HighlightUnaryExpression(id, getTime(), isPostfix, valueBefore, valueAfter));
+		return value;
+	}
+	
+	public double highlightUnaryExpression(int id, boolean isPostfix, double valueBefore, double valueAfter, double value) {
+		steps.add(new HighlightUnaryExpression(id, getTime(), isPostfix, valueBefore, valueAfter));
+		return value;
+	}
+	
+	public float highlightUnaryExpression(int id, boolean isPostfix, float valueBefore, float valueAfter, float value) {
+		steps.add(new HighlightUnaryExpression(id, getTime(), isPostfix, valueBefore, valueAfter));
+		return value;
+	}
+	
+	public char highlightUnaryExpression(int id, boolean isPostfix, char valueBefore, char valueAfter, char value) {
+		steps.add(new HighlightUnaryExpression(id, getTime(), isPostfix, valueBefore, valueAfter));
+		return value;
+	}
+	
+	public long highlightUnaryExpression(int id, boolean isPostfix, long valueBefore, long valueAfter, long value) {
+		steps.add(new HighlightUnaryExpression(id, getTime(), isPostfix, valueBefore, valueAfter));
+		return value;
+	}
+	
+	public short highlightUnaryExpression(int id, boolean isPostfix, short valueBefore, short valueAfter, short value) {
+		steps.add(new HighlightUnaryExpression(id, getTime(), isPostfix, valueBefore, valueAfter));
+		return value;
+	}
+	
+	public byte highlightUnaryExpression(int id, boolean isPostfix, byte valueBefore, byte valueAfter, byte value) {
+		steps.add(new HighlightUnaryExpression(id, getTime(), isPostfix, valueBefore, valueAfter));
+		return value;
+	}
 	
 
 	
@@ -225,11 +310,15 @@ public class StepCollection {
 	
 	
 	public void declarePrimitiveVariable(int id, String variableName, String variableType) {
-		// TODO
+		steps.add(new DeclarePrimitiveVariable(id, getTime(), variableName, variableType));
 	}
 
 	public void initializePrimitiveVariable(int id, String variableName, String variableType, String value) {
-		// TODO
+		steps.add(new InitializePrimitiveVariable(id, getTime(), variableName, variableType, value));
+	}
+
+	public void addEmptyStep() {
+		steps.add(new EmptyStep());
 	}
 	
 }

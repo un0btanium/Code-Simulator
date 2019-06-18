@@ -21,6 +21,7 @@ public class PrintToConsole extends Step {
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("type", "console");
 		jsonObj.put("id", id);
+		jsonObj.put("action", "Method Call");
 		jsonObj.put("msg", message);
 		return jsonObj;
 	}

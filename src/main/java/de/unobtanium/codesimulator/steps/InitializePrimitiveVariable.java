@@ -18,8 +18,9 @@ public class InitializePrimitiveVariable extends Step {
 	@Override
 	public JSONObject asJSONObject() {
 		JSONObject jsonObj = new JSONObject();
-		jsonObj.put("type", "declarePrimitiveVariable");
+		jsonObj.put("type", "initializePrimitiveVariable");
 		jsonObj.put("id", id);
+		jsonObj.put("action", "Variable Initialization");
 		jsonObj.put("name", variableName);
 		jsonObj.put("valueType", variableType);
 		jsonObj.put("value", value);

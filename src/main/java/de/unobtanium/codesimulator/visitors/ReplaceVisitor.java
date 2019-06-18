@@ -25,7 +25,6 @@ import com.github.javaparser.ast.expr.UnaryExpr;
 import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ForStmt;
-import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.visitor.ModifierVisitor;
 import com.github.javaparser.ast.visitor.Visitable;
 
@@ -143,22 +142,8 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 	
 	@Override
 	public Visitable visit(ForStmt n, CodeData arg) {
-
-
-		insertStatements(n, arg, true, "", ".highlight("+ arg.getIdOfNode(n) + ");");
+//		insertStatements(n, arg, true, ".highlight("+ arg.getIdOfNode(n) + ");"); // TODO not correct highlighting area because its multi line 
 		super.visit(n, arg);
-		
-//		for(int a=3, b=5; a<99; a++, b++)
-		
-//		NodeList<Expression> initialization = modifyList(n.getInitialization(), arg);
-//		Expression compare = n.getCompare().map(s -> (Expression) s.accept(this, arg)).orElse(null);
-//		NodeList<Expression> update = modifyList(n.getUpdate(), arg);
-//		Statement body = (Statement) n.getBody().accept(this, arg);
-//		n.setInitialization(initialization);
-//		n.setCompare(compare);
-//		n.setUpdate(update);
-//		n.setBody(body);
-        
 		return n;
 	}
 	
@@ -177,26 +162,33 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 	
 	@Override
 	public Visitable visit(VariableDeclarationExpr n, CodeData arg) {
-		super.visit(n, arg);
+//		super.visit(n, arg);
 		
 		for (VariableDeclarator varDec : n.getVariables()) {
 			if (varDec.getType().isPrimitiveType()) {
 				if (varDec.getInitializer().isPresent()) {
-					insertStatements(n, arg, true, ".initializePrimitiveVariable(" + arg.getIdOfNode(n) + ", \"" + varDec.getNameAsString() + "\", \"" + varDec.getTypeAsString() + "\", \"\" + (" + varDec.getInitializer().get() + "));");
+					String tempVarName = getNewTempVarName();
+					insertStatements(n, arg, true, varDec.getTypeAsString() + " " + tempVarName + " = " + varDec.getInitializer().get().accept(this, arg) + ";");
+					insertStatements(n, arg, true, ".initializePrimitiveVariable(" + arg.getIdOfNode(n.getVariables().size() > 1 ? varDec : n) + ", \"" + varDec.getNameAsString() + "\", \"" + varDec.getTypeAsString() + "\", \"\" + (" + tempVarName + "));");
+					varDec.setInitializer(tempVarName);
 				} else {
-					insertStatements(n, arg, true, ".declarePrimitiveVariable(" + arg.getIdOfNode(n) + ", \"" + varDec.getNameAsString() + "\", \"" + varDec.getTypeAsString() + "\");");
+					insertStatements(n, arg, true, ".declarePrimitiveVariable(" + arg.getIdOfNode(n.getVariables().size() > 1 ? varDec : n) + ", \"" + varDec.getNameAsString() + "\", \"" + varDec.getTypeAsString() + "\");");
 				}
 			} else {
 				if (varDec.getType().toString().equals("String")) { // TODO create check method for wrapper classes
 					if (varDec.getInitializer().isPresent()) {
-						insertStatements(n, arg, true, ".initializePrimitiveVariable(" + arg.getIdOfNode(n) + ", \"" + varDec.getNameAsString() + "\", \"" + varDec.getTypeAsString() + "\", \"\" + (" + varDec.getInitializer().get() + "));");
+						String tempVarName = getNewTempVarName();
+						insertStatements(n, arg, true, varDec.getTypeAsString() + " " + tempVarName + " = " + varDec.getInitializer().get().accept(this, arg) + ";");
+						insertStatements(n, arg, true, ".initializePrimitiveVariable(" + arg.getIdOfNode(n.getVariables().size() > 1 ? varDec : n) + ", \"" + varDec.getNameAsString() + "\", \"" + varDec.getTypeAsString() + "\", \"\" + (" + tempVarName + "));");
+						varDec.setInitializer(tempVarName);
 					} else {
-						insertStatements(n, arg, true, ".instance.declarePrimitiveVariable(" + arg.getIdOfNode(n) + ", \"" + varDec.getNameAsString() + "\", \"" + varDec.getTypeAsString() + "\");");
+						insertStatements(n, arg, true, ".instance.declarePrimitiveVariable(" + arg.getIdOfNode(n.getVariables().size() > 1 ? varDec : n) + ", \"" + varDec.getNameAsString() + "\", \"" + varDec.getTypeAsString() + "\");");
 					}
 				} else {
 //					System.err.println("No object declaration handling yet! In 'ReplaceVisitor.visit(VariableDeclarationExpr n, CodeData arg)'\n" + n.toString());
 				}
 			}
+			visit(varDec, arg);
 		}
 		
 		return n;
@@ -214,7 +206,7 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 	@Override
 	public Visitable visit(AssignExpr n, CodeData arg) {
 		super.visit(n, arg);
-		n.setValue(parseExpression(".assign(" + arg.getIdOfNode(n) + ", \"" + n.getTarget() + "\", " + n.getValue() + ")"));
+		n.setValue(parseExpression(".assign(" + arg.getIdOfNode(n) + ", \"" + n.getTarget().toString() + "\", " + n.getValue() + ")"));
 		return n;
 	}
 	
@@ -223,7 +215,7 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 	@Override
 	public Visitable visit(BinaryExpr n, CodeData arg) {
 		super.visit(n, arg);
-		return parseExpression(".highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
+		return parseExpression(".highlightBinaryExpression(" + arg.getIdOfNode(n) + ", \"" + n.getOperator().asString() + "\", " + n + ")");
 	}
 	
 
@@ -265,8 +257,34 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 	
 	
 	
+//	@Override
+//	public Visitable visit(NameExpr n, CodeData arg) {
+//		return parseExpression(".highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
+//	}
+	
+	
+	
+	
 	@Override
 	public Visitable visit(UnaryExpr n, CodeData arg) {
+		if (n.getOperator().isPostfix()) {
+			if (n.getOperator().asString().equals("++")) {
+				return parseExpression(".highlightUnaryExpression(" + arg.getIdOfNode(n) + ", true, " + n.getExpression() + ", " + n.getExpression() + "+1" +  ", " + n.toString() + ")");
+			} else if (n.getOperator().asString().equals("--")) {
+				return parseExpression(".highlightUnaryExpression(" + arg.getIdOfNode(n) + ", true, " + n.getExpression() + ", " + n.getExpression() + "-1" +  ", " + n.toString() + ")");
+			}
+		} else { // isPrefix
+			if (n.getOperator().asString().equals("++")) {
+				return parseExpression(".highlightUnaryExpression(" + arg.getIdOfNode(n) + ", false, " + n.getExpression() + ", " + n.getExpression() + "+1" +  ", " + n.toString() + ")");
+			} else if (n.getOperator().asString().equals("--")) {
+				return parseExpression(".highlightUnaryExpression(" + arg.getIdOfNode(n) + ", false, " + n.getExpression() + ", " + n.getExpression() + "-1" +  ", " + n.toString() + ")");
+			} else if (n.getOperator().asString().equals("-")) {
+				// TODO
+			} else if (n.getOperator().asString().equals("+")) {
+				// TODO
+			}
+			// before, previousState, after
+		}
 		return super.visit(n, arg);
 	}
 	

@@ -13,6 +13,7 @@ import de.unobtanium.codesimulator.codedata.CodeSnippet;
 import de.unobtanium.codesimulator.codedata.SourceFile;
 import de.unobtanium.codesimulator.exporter.NodeExporter;
 import de.unobtanium.codesimulator.exporter.StepExporter;
+import de.unobtanium.codesimulator.steps.StepCollection;
 import de.unobtanium.codesimulator.visitors.RegisteringVisitor;
 import de.unobtanium.codesimulator.visitors.ReplaceVisitor;
 
@@ -81,7 +82,10 @@ public class CodeSimulator {
     	
     	// IMPORT AND EXECUTE CODE
     	CodeExecuter.execute(codeData);
-
+    	
+    	// ADD EMPTY STEP AT THE END
+    	StepCollection.getInstance().addEmptyStep();
+    	
 		// DEBUG: WRITE COMMANDS TO CONSOLE
 //		for (SimulationStep step : SimulationData.getInstance().simulationSteps) {
 //			System.out.println(step.toString());
@@ -101,6 +105,12 @@ public class CodeSimulator {
     	result.put("node_data", nodeData);
     	result.put("isReadIn", isReadIn);
     	
+//    	String sourcecode = "";
+//    	for (SourceFile sourceFile : codeData.sourceFiles) {
+//    		sourcecode += sourceFile.cu.toString() + "\n\n\n\n\n";
+//    	}
+//    	result.put("sourcecode", sourcecode);
+    	
     	System.out.println(result.toString());
     }
 
@@ -113,6 +123,13 @@ public class CodeSimulator {
     	result.put("steps", steps);
     	result.put("node_data", nodeData);
     	result.put("isGuiReadIn", true);
+    	
+
+//    	String sourcecode = "";
+//    	for (SourceFile sourceFile : codeData.sourceFiles) {
+//    		sourcecode += sourceFile.cu.toString() + "\n\n\n\n\n";
+//    	}
+//    	result.put("sourcecode", sourcecode);
     	
     	System.out.println(result.toString());
 	}

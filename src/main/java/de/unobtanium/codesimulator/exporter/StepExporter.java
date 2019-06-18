@@ -18,7 +18,7 @@ public class StepExporter {
 		for (Step step : StepCollection.getInstance().steps) {
 			JSONObject jsonObj = step.asJSONObject();
 			
-			long delay = step.time-previousTime;
+			long delay = Math.max(0, step.time-previousTime);
 			if (jsonObj.getString("type").equals("console")) {
 				delay = 4;
 			}

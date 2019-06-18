@@ -16,8 +16,8 @@ public class StepCollection {
 			StepCollection.instance = new StepCollection();
 		}
 		return StepCollection.instance;
-		
 	}
+	
 	
 	
 	public List<Step> steps;
@@ -33,12 +33,41 @@ public class StepCollection {
 		startTime = System.currentTimeMillis();
 	}
 	
+	
+	
 	public void highlight(int id) {
 //		System.out.println("highlight(" + id + ")");
 		steps.add(new Highlight(id, getTime()));
 	}
 	
+	
+	
+	public String highlight(int id, String value) {
+		steps.add(new HighlightValue(id, getTime(), value));
+		return value;
+	}
+	
 	public int highlight(int id, int value) {
+		steps.add(new HighlightValue(id, getTime(), value));
+		return value;
+	}
+	
+	public double highlight(int id, double value) {
+		steps.add(new HighlightValue(id, getTime(), value));
+		return value;
+	}
+
+	public boolean highlight(int id, boolean value) {
+		steps.add(new HighlightValue(id, getTime(), value));
+		return value;
+	}
+	
+	public float highlight(int id, float value) {
+		steps.add(new HighlightValue(id, getTime(), value));
+		return value;
+	}
+
+	public char highlight(int id, char value) {
 		steps.add(new HighlightValue(id, getTime(), value));
 		return value;
 	}
@@ -58,35 +87,40 @@ public class StepCollection {
 		return value;
 	}
 	
-	public double highlight(int id, double value) {
-		steps.add(new HighlightValue(id, getTime(), value));
-		return value;
+	public Object highlightNull(int id) {
+		steps.add(new HighlightValue(id, getTime()));
+		return null;
 	}
 	
-	public float highlight(int id, float value) {
-		steps.add(new HighlightValue(id, getTime(), value));
-		return value;
-	}
 	
-	public String highlight(int id, String value) {
-		steps.add(new HighlightValue(id, getTime(), value));
-		return value;
-	}
 
-	public char highlight(int id, char value) {
-		steps.add(new HighlightValue(id, getTime(), value));
+	
+	public String assign(int id, String name, String value) {
+		steps.add(new AssignVariable(id, getTime(), name, value));
 		return value;
 	}
-
-	public boolean highlight(int id, boolean value) {
-		steps.add(new HighlightValue(id, getTime(), value));
-		return value;
-	}
-	
-	
-	
 	
 	public int assign(int id, String name, int value) {
+		steps.add(new AssignVariable(id, getTime(), name, value));
+		return value;
+	}
+	
+	public double assign(int id, String name, double value) {
+		steps.add(new AssignVariable(id, getTime(), name, value));
+		return value;
+	}
+
+	public boolean assign(int id, String name, boolean value) {
+		steps.add(new AssignVariable(id, getTime(), name, value));
+		return value;
+	}
+	
+	public float assign(int id, String name, float value) {
+		steps.add(new AssignVariable(id, getTime(), name, value));
+		return value;
+	}
+
+	public char assign(int id, String name, char value) {
 		steps.add(new AssignVariable(id, getTime(), name, value));
 		return value;
 	}
@@ -106,27 +140,42 @@ public class StepCollection {
 		return value;
 	}
 	
-	public double assign(int id, String name, double value) {
+	public int assign(int id, String name, Integer value) {
 		steps.add(new AssignVariable(id, getTime(), name, value));
 		return value;
 	}
 	
-	public float assign(int id, String name, float value) {
+	public double assign(int id, String name, Double value) {
+		steps.add(new AssignVariable(id, getTime(), name, value));
+		return value;
+	}
+
+	public boolean assign(int id, String name, Boolean value) {
 		steps.add(new AssignVariable(id, getTime(), name, value));
 		return value;
 	}
 	
-	public String assign(int id, String name, String value) {
+	public float assign(int id, String name, Float value) {
 		steps.add(new AssignVariable(id, getTime(), name, value));
 		return value;
 	}
 
-	public char assign(int id, String name, char value) {
+	public char assign(int id, String name, Character value) {
 		steps.add(new AssignVariable(id, getTime(), name, value));
 		return value;
 	}
 
-	public boolean assign(int id, String name, boolean value) {
+	public long assign(int id, String name, Long value) {
+		steps.add(new AssignVariable(id, getTime(), name, value));
+		return value;
+	}
+
+	public short assign(int id, String name, Short value) {
+		steps.add(new AssignVariable(id, getTime(), name, value));
+		return value;
+	}
+	
+	public byte assign(int id, String name, Byte value) {
 		steps.add(new AssignVariable(id, getTime(), name, value));
 		return value;
 	}
@@ -149,6 +198,7 @@ public class StepCollection {
 	}
 	
 	
+	
 	public void println(int id, String message) {
 //		System.out.println("println(" + id + ", " + message + ")");
 		steps.add(new PrintLineToConsole(id, getTime(), message));
@@ -159,15 +209,20 @@ public class StepCollection {
 		steps.add(new PrintToConsole(id, getTime(), message));
 	}
 	
+	
+	
 	public void readLine(int id) {
 		steps.add(new ReadString(id, getTime()));
 		CodeSimulator.exportCurrentState(true);
 	}
 	
+	
+	
 	public void showError(int id, String errorMessage) {
 		steps.add(new ShowError(id, getTime(), errorMessage));
 	}
 
+	
 	
 	public void declarePrimitiveVariable(int id, String variableName, String variableType) {
 		// TODO
@@ -176,7 +231,5 @@ public class StepCollection {
 	public void initializePrimitiveVariable(int id, String variableName, String variableType, String value) {
 		// TODO
 	}
-	
-	
 	
 }

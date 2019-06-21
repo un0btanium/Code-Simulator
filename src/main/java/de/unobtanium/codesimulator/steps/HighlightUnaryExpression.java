@@ -136,7 +136,13 @@ public class HighlightUnaryExpression extends Step {
 		jsonObj.put("valueType", valueType);
 
 		jsonObj.put("isPostfix", "" + isPostfix);
-		jsonObj.put("valueBefore", value);
+		jsonObj.put("value", value);
+		jsonObj.put("value", value);
+		if (isPostfix) {
+			jsonObj.put("valueBefore", value);
+		} else {
+			jsonObj.put("valueBefore", valueAfter);
+		}
 		jsonObj.put("valueAfter", valueAfter);
 		
 		return jsonObj;

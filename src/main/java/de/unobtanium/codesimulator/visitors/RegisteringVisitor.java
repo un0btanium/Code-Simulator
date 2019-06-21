@@ -15,6 +15,7 @@ import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.github.javaparser.ast.expr.UnaryExpr;
 import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
+import com.github.javaparser.ast.stmt.ForEachStmt;
 import com.github.javaparser.ast.stmt.ForStmt;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
@@ -35,6 +36,11 @@ public class RegisteringVisitor extends VoidVisitorAdapter<CodeData> {
 	@Override
 	public void visit(ForStmt n, CodeData arg) {
 		arg.registerNode(n);
+		super.visit(n, arg);
+	}
+	
+	@Override
+	public void visit(ForEachStmt n, CodeData arg) {
 		super.visit(n, arg);
 	}
 	

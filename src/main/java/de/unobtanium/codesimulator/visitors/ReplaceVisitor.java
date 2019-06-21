@@ -24,6 +24,7 @@ import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.github.javaparser.ast.expr.UnaryExpr;
 import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
+import com.github.javaparser.ast.stmt.ForEachStmt;
 import com.github.javaparser.ast.stmt.ForStmt;
 import com.github.javaparser.ast.visitor.ModifierVisitor;
 import com.github.javaparser.ast.visitor.Visitable;
@@ -143,8 +144,13 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 	@Override
 	public Visitable visit(ForStmt n, CodeData arg) {
 //		insertStatements(n, arg, true, ".highlight("+ arg.getIdOfNode(n) + ");"); // TODO not correct highlighting area because its multi line 
-		super.visit(n, arg);
-		return n;
+		
+		return super.visit(n, arg);
+	}
+	
+	@Override
+	public Visitable visit(ForEachStmt n, CodeData arg) {
+		return super.visit(n, arg);
 	}
 	
 	
@@ -279,11 +285,10 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 			} else if (n.getOperator().asString().equals("--")) {
 				return parseExpression(".highlightUnaryExpression(" + arg.getIdOfNode(n) + ", false, " + n.getExpression() + ", " + n.getExpression() + "-1" +  ", " + n.toString() + ")");
 			} else if (n.getOperator().asString().equals("-")) {
-				// TODO
+				return parseExpression(".highlightUnaryExpression(" + arg.getIdOfNode(n) + ", false, " + n.getExpression() + ", " + "-" + n.getExpression() +  ", " + n.toString() + ")");
 			} else if (n.getOperator().asString().equals("+")) {
-				// TODO
+				return parseExpression(".highlightUnaryExpression(" + arg.getIdOfNode(n) + ", false, " + n.getExpression() + ", " + "+" + n.getExpression() +  ", " + n.toString() + ")");
 			}
-			// before, previousState, after
 		}
 		return super.visit(n, arg);
 	}

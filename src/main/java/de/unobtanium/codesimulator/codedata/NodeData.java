@@ -9,6 +9,8 @@ public class NodeData {
 	int id;
 	Node node;
 	
+	String identifier;
+	
 	int lineStart;
 	int lineEnd;
 	int columnStart;
@@ -20,18 +22,40 @@ public class NodeData {
 		
 		lineStart = node.getBegin().get().line;
 		lineEnd = node.getEnd().get().line;
+		
 		columnStart = node.getBegin().get().column;
-		columnEnd = node.getEnd().get().column;
+		
+		if (lineStart == lineEnd) {
+			columnEnd = node.getEnd().get().column;
+		} else {
+			String[] lines = node.toString().lines().toArray(String[]::new);
+			columnEnd = -1;
+			for (String str : lines) {
+				int length = str.length();
+				if (columnEnd < length) {
+					columnEnd = length;
+				}
+			}
+		}
+		
 	}
 	
 	
 	public JSONObject toJSONObject() {
 		return new JSONObject()
 				.put("id", id)
+				.put("identifier", identifier)
 				.put("lineStart", lineStart)
 				.put("lineEnd", lineEnd)
 				.put("columnStart", columnStart)
 				.put("columnEnd", columnEnd);
+	}
+	
+	public void setIdentifier(String identifier, int lineOffset) {
+		this.identifier = identifier;
+		
+		lineStart = lineStart-lineOffset;
+		lineEnd = lineEnd-lineOffset;
 	}
 	
 }

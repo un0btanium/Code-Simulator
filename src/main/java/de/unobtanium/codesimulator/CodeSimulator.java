@@ -70,7 +70,9 @@ public class CodeSimulator {
     	
     	// REGISTER NODES, GIVE THEM UNIQUE IDs AND SAVE THEIR POSITION DATA
     	for (SourceFile sourceFile : sourceFiles) {
-        	new RegisteringVisitor().visit(sourceFile.cu, codeData);
+    		RegisteringVisitor registeringVisitor= new RegisteringVisitor();
+    		registeringVisitor.sourceFile = sourceFile;
+    		registeringVisitor.visit(sourceFile.cu, codeData);
     	}
     	
     	// REPLACE PRINT TO CONSOLE COMMANDS
@@ -97,7 +99,7 @@ public class CodeSimulator {
     
     public static void exportCurrentState(boolean isReadIn) {
     	JSONArray steps = StepExporter.export();
-    	JSONArray nodeData = NodeExporter.export(codeData);
+    	JSONObject nodeData = NodeExporter.export(codeData);
     	
 
     	JSONObject result = new JSONObject();
@@ -116,7 +118,7 @@ public class CodeSimulator {
 
 	public static void exportCurrentStateGui() {
     	JSONArray steps = StepExporter.export();
-    	JSONArray nodeData = NodeExporter.export(codeData);
+    	JSONObject nodeData = NodeExporter.export(codeData);
     	
 
     	JSONObject result = new JSONObject();

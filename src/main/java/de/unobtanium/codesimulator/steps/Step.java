@@ -10,6 +10,7 @@ public abstract class Step {
 	public Step(int id, long time) {
 		this.id = id;
 		this.time = time;
+		StepCollection.getInstance().addNodeIDtoUsed(id);
 	}
 	
 	

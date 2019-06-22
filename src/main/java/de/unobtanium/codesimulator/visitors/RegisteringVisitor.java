@@ -20,14 +20,15 @@ import com.github.javaparser.ast.stmt.ForStmt;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 import de.unobtanium.codesimulator.codedata.CodeData;
+import de.unobtanium.codesimulator.codedata.SourceFile;
 
 public class RegisteringVisitor extends VoidVisitorAdapter<CodeData> {
-	
-	
+
+	public SourceFile sourceFile = null;
 	
 	@Override
 	public void visit(MethodCallExpr n, CodeData arg) {
-		arg.registerNode(n);
+		arg.registerNode(n, sourceFile);
 		super.visit(n, arg);
 	}
 	
@@ -35,12 +36,13 @@ public class RegisteringVisitor extends VoidVisitorAdapter<CodeData> {
 	
 	@Override
 	public void visit(ForStmt n, CodeData arg) {
-		arg.registerNode(n);
+		arg.registerNode(n, sourceFile);
 		super.visit(n, arg);
 	}
 	
 	@Override
 	public void visit(ForEachStmt n, CodeData arg) {
+		arg.registerNode(n, sourceFile);
 		super.visit(n, arg);
 	}
 	
@@ -48,7 +50,7 @@ public class RegisteringVisitor extends VoidVisitorAdapter<CodeData> {
 
 	@Override
 	public void visit(BlockStmt n, CodeData arg) {
-		arg.registerNode(n);
+		arg.registerNode(n, sourceFile);
 		super.visit(n, arg);
 	}
 	
@@ -56,13 +58,13 @@ public class RegisteringVisitor extends VoidVisitorAdapter<CodeData> {
 	
 	@Override
 	public void visit(VariableDeclarationExpr n, CodeData arg) {
-		arg.registerNode(n);
+		arg.registerNode(n, sourceFile);
 		super.visit(n, arg);
 	}
 	
 	@Override
 	public void visit(VariableDeclarator n, CodeData arg) {
-		arg.registerNode(n);
+		arg.registerNode(n, sourceFile);
 		super.visit(n, arg);
 	}
 	
@@ -70,7 +72,7 @@ public class RegisteringVisitor extends VoidVisitorAdapter<CodeData> {
 	
 	@Override
 	public void visit(AssignExpr n, CodeData arg) {
-		arg.registerNode(n);
+		arg.registerNode(n, sourceFile);
 		super.visit(n, arg);
 	}
 	
@@ -78,7 +80,7 @@ public class RegisteringVisitor extends VoidVisitorAdapter<CodeData> {
 	
 	@Override
 	public void visit(BinaryExpr n, CodeData arg) {
-		arg.registerNode(n);
+		arg.registerNode(n, sourceFile);
 		super.visit(n, arg);
 	}
 	
@@ -86,43 +88,43 @@ public class RegisteringVisitor extends VoidVisitorAdapter<CodeData> {
 	
 	@Override
 	public void visit(StringLiteralExpr n, CodeData arg) {
-		arg.registerNode(n);
+		arg.registerNode(n, sourceFile);
 		super.visit(n, arg);
 	}
 	
 	@Override
 	public void visit(IntegerLiteralExpr n, CodeData arg) {
-		arg.registerNode(n);
+		arg.registerNode(n, sourceFile);
 		super.visit(n, arg);
 	}
 	
 	@Override
 	public void visit(DoubleLiteralExpr n, CodeData arg) {
-		arg.registerNode(n);
+		arg.registerNode(n, sourceFile);
 		super.visit(n, arg);
 	}
 	
 	@Override
 	public void visit(BooleanLiteralExpr n, CodeData arg) {
-		arg.registerNode(n);
+		arg.registerNode(n, sourceFile);
 		super.visit(n, arg);
 	}
 	
 	@Override
 	public void visit(CharLiteralExpr n, CodeData arg) {
-		arg.registerNode(n);
+		arg.registerNode(n, sourceFile);
 		super.visit(n, arg);
 	}
 	
 	@Override
 	public void visit(LongLiteralExpr n, CodeData arg) {
-		arg.registerNode(n);
+		arg.registerNode(n, sourceFile);
 		super.visit(n, arg);
 	}
 	
 	@Override
 	public void visit(NullLiteralExpr n, CodeData arg) {
-		arg.registerNode(n);
+		arg.registerNode(n, sourceFile);
 		super.visit(n, arg);
 	}
 	
@@ -130,7 +132,7 @@ public class RegisteringVisitor extends VoidVisitorAdapter<CodeData> {
 	
 	@Override
 	public void visit(NameExpr n, CodeData arg) {
-		arg.registerNode(n);
+		arg.registerNode(n, sourceFile);
 		super.visit(n, arg);
 	}
 	
@@ -138,7 +140,8 @@ public class RegisteringVisitor extends VoidVisitorAdapter<CodeData> {
 	
 	@Override
 	public void visit(UnaryExpr n, CodeData arg) {
-		arg.registerNode(n);
+		arg.registerNode(n, sourceFile);
 		super.visit(n, arg);
 	}
+	
 }

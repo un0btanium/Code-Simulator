@@ -1,6 +1,7 @@
 package de.unobtanium.codesimulator.steps;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -22,6 +23,7 @@ public class StepCollection {
 	
 	public List<Step> steps;
 	public long startTime;
+	public HashSet<Integer> usedNodeIds;
 	
 	
 	public long getTime() {
@@ -31,8 +33,15 @@ public class StepCollection {
 	private StepCollection() {
 		steps = new ArrayList<>();
 		startTime = System.currentTimeMillis();
+		usedNodeIds = new HashSet<>();
 	}
 	
+	
+	public void addNodeIDtoUsed(int id) {
+		if (id >= 0) {
+			usedNodeIds.add(id);
+		}
+	}
 	
 	
 	public void highlight(int id) {

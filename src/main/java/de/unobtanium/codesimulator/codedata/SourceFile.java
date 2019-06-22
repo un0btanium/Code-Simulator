@@ -2,7 +2,6 @@ package de.unobtanium.codesimulator.codedata;
 
 import java.util.Map;
 
-import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 
 public class SourceFile {
@@ -19,20 +18,31 @@ public class SourceFile {
 		this.className = className;
 		this.code = code;
 		
+		// register this SourceFile on all CodeSnippets if the code contains the identifier
 		for (String key : codeSnippets.keySet()) {
-			this.code = this.code.replace("// " + codeSnippets.get(key).identifier, codeSnippets.get(key).code);
+			CodeSnippet codeSnippet = codeSnippets.get(key);
+			if (codeSnippet.sourceFile != null) {
+				continue; // skip this code snippet because its already found, duplicate identifier ( TODO log error)
+			}
+			
+			int index = this.code.indexOf("// " + codeSnippet.identifier);
+			if (index != -1) {
+//				if (codeSnippet.sourceFile != null) {
+//					System.err.println("The code snippet '" + codeSnippet + "' occurs more than once! That's not allowed!");
+//				}
+				codeSnippet.sourceFile = this;
+				
+				String[] lineStrings = this.code.lines().toArray(String[]::new);
+				int line = 1;
+				for (String str : lineStrings) {
+					if (str.contains("// " + codeSnippet.identifier)) {
+						codeSnippet.startAtLine = line;
+						break;
+					}
+					line++;
+				}
+			}
 		}
-		
-		for (String key : codeSnippets.keySet()) {
-			this.code = this.code.replace("//" + codeSnippets.get(key).identifier, codeSnippets.get(key).code);
-		}
-		
-//		System.out.println(this.code);
-		
-		this.cu = JavaParser.parse(this.code);
-
-//		System.out.println(cu.toString(new PrettyPrinterConfiguration().setTabWidth(4)));
-		
 	}
 	
 }

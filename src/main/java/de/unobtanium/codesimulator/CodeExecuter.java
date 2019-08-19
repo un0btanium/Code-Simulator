@@ -84,26 +84,17 @@ public class CodeExecuter {
 						}
 						
 						if (identifier != null) {
-							StepCollection.getInstance().showError(-2, diagnostic.toString() + "\n", identifier, diagnostic.getLineNumber()-lineOffset);
+							
+							String errorMessage = diagnostic.toString() + "\n";
+							errorMessage = errorMessage.replaceFirst("" + diagnostic.getLineNumber(), "" + ((diagnostic.getLineNumber()-lineOffset)+1));
+							
+							StepCollection.getInstance().showError(-2, errorMessage, identifier, diagnostic.getLineNumber()-lineOffset);
 						} else {
 							StepCollection.getInstance().showError(-2, diagnostic.toString() + "\n");
 						}
 						break;
 					}
 				}
-				
-				
-//				System.out.printf( "Kind: %s%n", diagnostic.getKind() );
-//				System.out.printf( "Quelle: %s%n", diagnostic.getSource() );
-//				System.out.printf( "Code und Nachricht: %s: %s%n", diagnostic.getCode(), diagnostic.getMessage( null ) );
-//				System.out.printf( "Zeile: %s%n", diagnostic.getLineNumber() );
-//				System.out.printf( "Position/Spalte: %s/%s%n", diagnostic.getPosition(), diagnostic.getColumnNumber() );
-//				System.out.printf( "Startpostion/Endposition: %s/%s%n", diagnostic.getStartPosition(), diagnostic.getEndPosition() );
-//				System.out.println();
-//				System.out.println(diagnostic.toString());
-//				System.out.println();
-//				System.out.println(diagnostic.getSource());
-//				System.out.println();
 			}
 			
 			return null;

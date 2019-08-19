@@ -26,12 +26,12 @@ public class CodeData {
 		nodesByID = new HashMap<>();
 		nodeIDcounter = 0;
 		
-		// TODO find comments
-		// TODO find comment text
-		// TODO compare comment text with code snippets
-		// TODO replace comment with code snippet for final source code file
-		// TODO repeat for all comments
-		// TODO extra: relative lines for the code snippets for proper error line messages for the user
+		// find comments
+		// find comment text
+		// compare comment text with code snippets
+		//  replace comment with code snippet for final source code file
+		// repeat for all comments
+		// extra: relative lines for the code snippets for proper error line messages for the user
 		
 		// sort CodeSnippets by SourceFiles
 		codeSnippetsBySourceFiles = new HashMap<>();
@@ -68,11 +68,15 @@ public class CodeData {
 			}
 		}
 		
+	}
+	
+	public void parseSourceFilesWithJavaParser() {
 		// parse SourceFiles
 		for (SourceFile sourceFile : sourceFiles) {
 			sourceFile.cu = StaticJavaParser.parse(sourceFile.code); // TODO catch parse exceptions and create compiler errors for user (compile with javac?)
 		}
 	}
+	
 	
 	/**
 	 * Registers node if it is inside a CodeSnippet
@@ -87,20 +91,13 @@ public class CodeData {
 		
 		NodeData nodeData = new NodeData(nodeIDcounter, node);
 
-		String identifier = null;
-		int lineOffset = -1;
 		for (CodeSnippet codeSnippet : codeSnippetsBySourceFiles.get(sourceFile)) {
 			if (nodeData.lineStart >= codeSnippet.startAtLine && nodeData.lineStart <= codeSnippet.getEnd()) {
-				identifier = codeSnippet.identifier;
-				lineOffset = codeSnippet.startAtLine;
+				nodeData.setIdentifier(codeSnippet.identifier, codeSnippet.startAtLine);
+				nodesByID.put(nodeIDcounter, nodeData);
+				nodeIDcounter++; 
 				break;
 			}
-		}
-
-		if (identifier != null) {
-			nodeData.setIdentifier(identifier, lineOffset);
-			nodesByID.put(nodeIDcounter, nodeData);
-			nodeIDcounter++; 
 		}
 	}
 	

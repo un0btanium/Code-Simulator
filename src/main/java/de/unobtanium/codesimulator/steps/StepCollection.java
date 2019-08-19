@@ -311,9 +311,13 @@ public class StepCollection {
 	}
 	
 	
-	
+
 	public void showError(int id, String errorMessage) {
 		steps.add(new ShowError(id, getTime(), errorMessage));
+	}
+	
+	public void showError(int id, String errorMessage, String identifier, long line) {
+		steps.add(new ShowError(id, getTime(), errorMessage, identifier, line));
 	}
 
 	

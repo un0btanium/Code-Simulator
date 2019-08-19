@@ -3,11 +3,11 @@ package de.unobtanium.codesimulator.codedata;
 public class CodeSnippet {
 	
 
-	String identifier;
+	public String identifier;
 	String replacementCode;
 	
 	SourceFile sourceFile;
-	int startAtLine;
+	public int startAtLine;
 	int lines;
 	
 	public CodeSnippet(String identifier, String code) {

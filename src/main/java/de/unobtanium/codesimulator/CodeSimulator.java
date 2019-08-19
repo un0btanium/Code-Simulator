@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import de.unobtanium.codesimulator.codedata.CodeData;
 import de.unobtanium.codesimulator.codedata.CodeSnippet;
 import de.unobtanium.codesimulator.codedata.SourceFile;
+import de.unobtanium.codesimulator.compilerapi.MemoryClassLoader;
 import de.unobtanium.codesimulator.exporter.NodeExporter;
 import de.unobtanium.codesimulator.exporter.StepExporter;
 import de.unobtanium.codesimulator.steps.StepCollection;
@@ -22,12 +23,6 @@ public class CodeSimulator {
 	private static CodeData codeData;
 	
     public static void main( String[] args ) {
-
-    	
-//		System.out.println("OUTPUT:");
-//    	for (String str : args) {
-//    		System.out.println(str);
-//    	}
     	
     	if (args.length != 1) {
     		JSONObject result = new JSONObject();
@@ -68,6 +63,19 @@ public class CodeSimulator {
     	// SAVE DATA IN CodeData OBJECT
     	codeData = new CodeData(sourceFiles, codeSnippets);
     	
+    	// if raw code cant be compiled exit program (errors are already saved as ErrorStep objects)
+    	if (CodeExecuter.compileCode(codeData) == null) {
+        	StepCollection.getInstance().addEmptyStep();
+        	exportCurrentState(false);
+        	return;
+    	}
+    	
+    	
+    	// TODO check if raw source code compiles
+    	// TODO if not explore 
+
+    	codeData.parseSourceFilesWithJavaParser();
+    	
     	// REGISTER NODES, GIVE THEM UNIQUE IDs AND SAVE THEIR POSITION DATA
     	for (SourceFile sourceFile : sourceFiles) {
     		RegisteringVisitor registeringVisitor= new RegisteringVisitor();
@@ -75,7 +83,7 @@ public class CodeSimulator {
     		registeringVisitor.visit(sourceFile.cu, codeData);
     	}
     	
-    	// REPLACE PRINT TO CONSOLE COMMANDS
+    	// REPLACE COMMANDS WITH CUSTOM DEBUG COMMANDS
     	for (SourceFile sourceFile : sourceFiles) {
         	new ReplaceVisitor().visit(sourceFile.cu, codeData);
 //        	System.out.println(v.toString());

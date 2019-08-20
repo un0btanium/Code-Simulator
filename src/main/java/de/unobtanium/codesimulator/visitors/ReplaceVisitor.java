@@ -38,7 +38,14 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 	
 	private Map<Integer, Integer> offset = new HashMap<>();
 	
+	
+	private final int VERYLOW = 1;
+	private final int LOW = 2;
+	private final int MEDIUM = 3;
+	private final int HIGH = 4;
+	private final int VERYHIGH = 5;
 
+	
 	private String getNewTempVarName() {
 		currentVariableName = "codeSimulatorTempVariable" + tempVarCounter;
 		tempVarCounter++;
@@ -139,7 +146,9 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
         			return super.visit(n, arg);
         		}
         		
-        		insertStatements(n, arg, true, ".highlight("+ arg.getIdOfNode(n) + ");"); // TODO highlight Method tooltip info
+        		if (arg.highlightingDetailLevelIndex >= VERYLOW) {
+        			insertStatements(n, arg, true, ".highlight("+ arg.getIdOfNode(n) + ");"); // TODO highlight Method tooltip info
+        		}
         		
         	}
         }
@@ -156,8 +165,10 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 		if (arg.getIdOfNode(n) == -1) {
 			return super.visit(n, arg);
 		}
-		
-		insertStatements(n, arg, true, ".highlight("+ arg.getIdOfNode(n) + ");"); // TODO highlight For Loop tooltip info
+
+		if (arg.highlightingDetailLevelIndex >= VERYHIGH) {
+			insertStatements(n, arg, true, ".highlight("+ arg.getIdOfNode(n) + ");"); // TODO highlight For Loop tooltip info
+		}
 		
 		return super.visit(n, arg);
 	}
@@ -169,7 +180,9 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 			return super.visit(n, arg);
 		}
 
-		insertStatements(n, arg, true, ".highlight("+ arg.getIdOfNode(n) + ");"); // TODO highlight ForEach Loop tooltip info
+		if (arg.highlightingDetailLevelIndex >= VERYHIGH) {
+			insertStatements(n, arg, true, ".highlight("+ arg.getIdOfNode(n) + ");"); // TODO highlight ForEach Loop tooltip info
+		}
 		
 		return super.visit(n, arg);
 	}
@@ -196,25 +209,37 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 		
 		for (VariableDeclarator varDec : n.getVariables()) {
 			if (varDec.getType().isPrimitiveType()) {
-				if (varDec.getInitializer().isPresent()) {
-					String tempVarName = getNewTempVarName();
-					insertStatements(n, arg, true, varDec.getTypeAsString() + " " + tempVarName + " = " + varDec.getInitializer().get().accept(this, arg) + ";");
-					insertStatements(n, arg, true, ".initializePrimitiveVariable(" + arg.getIdOfNode(n.getVariables().size() > 1 ? varDec : n) + ", \"" + varDec.getNameAsString() + "\", \"" + varDec.getTypeAsString() + "\", \"\" + (" + tempVarName + "));");
-					varDec.setInitializer(tempVarName);
-				} else {
-					insertStatements(n, arg, true, ".declarePrimitiveVariable(" + arg.getIdOfNode(n.getVariables().size() > 1 ? varDec : n) + ", \"" + varDec.getNameAsString() + "\", \"" + varDec.getTypeAsString() + "\");");
-				}
-			} else {
-				if (varDec.getType().toString().equals("String")) { // TODO create check method for wrapper classes
+				
+				if (arg.highlightingDetailLevelIndex >= MEDIUM) {
 					if (varDec.getInitializer().isPresent()) {
 						String tempVarName = getNewTempVarName();
 						insertStatements(n, arg, true, varDec.getTypeAsString() + " " + tempVarName + " = " + varDec.getInitializer().get().accept(this, arg) + ";");
 						insertStatements(n, arg, true, ".initializePrimitiveVariable(" + arg.getIdOfNode(n.getVariables().size() > 1 ? varDec : n) + ", \"" + varDec.getNameAsString() + "\", \"" + varDec.getTypeAsString() + "\", \"\" + (" + tempVarName + "));");
 						varDec.setInitializer(tempVarName);
 					} else {
-						insertStatements(n, arg, true, ".instance.declarePrimitiveVariable(" + arg.getIdOfNode(n.getVariables().size() > 1 ? varDec : n) + ", \"" + varDec.getNameAsString() + "\", \"" + varDec.getTypeAsString() + "\");");
+						insertStatements(n, arg, true, ".declarePrimitiveVariable(" + arg.getIdOfNode(n.getVariables().size() > 1 ? varDec : n) + ", \"" + varDec.getNameAsString() + "\", \"" + varDec.getTypeAsString() + "\");");
 					}
+				}
+				
+			} else {
+				if (varDec.getType().toString().equals("String")) { // TODO create check method for wrapper classes
+
+					if (arg.highlightingDetailLevelIndex >= MEDIUM) {
+						if (varDec.getInitializer().isPresent()) {
+							String tempVarName = getNewTempVarName();
+							insertStatements(n, arg, true, varDec.getTypeAsString() + " " + tempVarName + " = " + varDec.getInitializer().get().accept(this, arg) + ";");
+							insertStatements(n, arg, true, ".initializePrimitiveVariable(" + arg.getIdOfNode(n.getVariables().size() > 1 ? varDec : n) + ", \"" + varDec.getNameAsString() + "\", \"" + varDec.getTypeAsString() + "\", \"\" + (" + tempVarName + "));");
+							varDec.setInitializer(tempVarName);
+						} else {
+							insertStatements(n, arg, true, ".instance.declarePrimitiveVariable(" + arg.getIdOfNode(n.getVariables().size() > 1 ? varDec : n) + ", \"" + varDec.getNameAsString() + "\", \"" + varDec.getTypeAsString() + "\");");
+						}
+					}
+					
 				} else {
+
+					if (arg.highlightingDetailLevelIndex >= LOW) {
+						// TODO Object declaration handling
+					}
 //					System.err.println("No object declaration handling yet! In 'ReplaceVisitor.visit(VariableDeclarationExpr n, CodeData arg)'\n" + n.toString());
 				}
 			}
@@ -234,7 +259,9 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 		}
 		
 		super.visit(n, arg);
-		n.setValue(parseExpression(".assign(" + arg.getIdOfNode(n) + ", \"" + n.getTarget().toString() + "\", " + n.getValue() + ")"));
+		if (arg.highlightingDetailLevelIndex >= MEDIUM) {
+			n.setValue(parseExpression(".assign(" + arg.getIdOfNode(n) + ", \"" + n.getTarget().toString() + "\", " + n.getValue() + ")"));
+		}
 		return n;
 	}
 	
@@ -248,7 +275,11 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 		}
 		
 		super.visit(n, arg);
-		return parseExpression(".highlightBinaryExpression(" + arg.getIdOfNode(n) + ", \"" + n.getOperator().asString() + "\", " + n + ")");
+		if (arg.highlightingDetailLevelIndex >= HIGH) {
+			return parseExpression(".highlightBinaryExpression(" + arg.getIdOfNode(n) + ", \"" + n.getOperator().asString() + "\", " + n + ")");
+		} else {
+			return n;
+		}
 	}
 	
 
@@ -259,8 +290,12 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 		if (arg.getIdOfNode(n) == -1) {
 			return super.visit(n, arg);
 		}
-		
-		return parseExpression(".highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
+
+		if (arg.highlightingDetailLevelIndex >= VERYHIGH) {
+			return parseExpression(".highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
+		} else {
+			return n;
+		}
 	}
 	
 	@Override
@@ -270,7 +305,11 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 			return super.visit(n, arg);
 		}
 		
-		return parseExpression(".highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
+		if (arg.highlightingDetailLevelIndex >= VERYHIGH) {
+			return parseExpression(".highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
+		} else {
+			return n;
+		}
 	}
 	
 	@Override
@@ -279,8 +318,12 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 		if (arg.getIdOfNode(n) == -1) {
 			return super.visit(n, arg);
 		}
-		
-		return parseExpression(".highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
+
+		if (arg.highlightingDetailLevelIndex >= VERYHIGH) {
+			return parseExpression(".highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
+		} else {
+			return n;
+		}
 	}
 
 	@Override
@@ -289,8 +332,12 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 		if (arg.getIdOfNode(n) == -1) {
 			return super.visit(n, arg);
 		}
-		
-		return parseExpression(".highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
+
+		if (arg.highlightingDetailLevelIndex >= VERYHIGH) {
+			return parseExpression(".highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
+		} else {
+			return n;
+		}
 	}
 	
 	@Override
@@ -299,8 +346,12 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 		if (arg.getIdOfNode(n) == -1) {
 			return super.visit(n, arg);
 		}
-		
-		return parseExpression(".highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
+
+		if (arg.highlightingDetailLevelIndex >= VERYHIGH) {
+			return parseExpression(".highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
+		} else {
+			return n;
+		}
 	}
 	
 	@Override
@@ -309,8 +360,12 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 		if (arg.getIdOfNode(n) == -1) {
 			return super.visit(n, arg);
 		}
-		
-		return parseExpression(".highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
+
+		if (arg.highlightingDetailLevelIndex >= VERYHIGH) {
+			return parseExpression(".highlight(" + arg.getIdOfNode(n) + ", " + n + ")");
+		} else {
+			return n;
+		}
 	}
 	
 	@Override
@@ -319,8 +374,12 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 		if (arg.getIdOfNode(n) == -1) {
 			return super.visit(n, arg);
 		}
-		
-		return parseExpression(".highlightNull(" + arg.getIdOfNode(n) + ")");
+
+		if (arg.highlightingDetailLevelIndex >= VERYHIGH) {
+			return parseExpression(".highlightNull(" + arg.getIdOfNode(n) + ")");
+		} else {
+			return n;
+		}
 	}
 	
 	
@@ -339,24 +398,27 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 		if (arg.getIdOfNode(n) == -1) {
 			return super.visit(n, arg);
 		}
-		
-		if (n.getOperator().isPostfix()) {
-			if (n.getOperator().asString().equals("++")) {
-				return parseExpression(".highlightUnaryExpression(" + arg.getIdOfNode(n) + ", true, " + n.getExpression() + ", " + n.getExpression() + "+1" +  ", " + n.toString() + ")");
-			} else if (n.getOperator().asString().equals("--")) {
-				return parseExpression(".highlightUnaryExpression(" + arg.getIdOfNode(n) + ", true, " + n.getExpression() + ", " + n.getExpression() + "-1" +  ", " + n.toString() + ")");
-			}
-		} else { // isPrefix
-			if (n.getOperator().asString().equals("++")) {
-				return parseExpression(".highlightUnaryExpression(" + arg.getIdOfNode(n) + ", false, " + n.getExpression() + ", " + n.getExpression() + "+1" +  ", " + n.toString() + ")");
-			} else if (n.getOperator().asString().equals("--")) {
-				return parseExpression(".highlightUnaryExpression(" + arg.getIdOfNode(n) + ", false, " + n.getExpression() + ", " + n.getExpression() + "-1" +  ", " + n.toString() + ")");
-			} else if (n.getOperator().asString().equals("-")) {
-				return parseExpression(".highlightUnaryExpression(" + arg.getIdOfNode(n) + ", false, " + n.getExpression() + ", " + "-" + n.getExpression() +  ", " + n.toString() + ")");
-			} else if (n.getOperator().asString().equals("+")) {
-				return parseExpression(".highlightUnaryExpression(" + arg.getIdOfNode(n) + ", false, " + n.getExpression() + ", " + "+" + n.getExpression() +  ", " + n.toString() + ")");
+
+		if (arg.highlightingDetailLevelIndex >= HIGH) {
+			if (n.getOperator().isPostfix()) {
+				if (n.getOperator().asString().equals("++")) {
+					return parseExpression(".highlightUnaryExpression(" + arg.getIdOfNode(n) + ", true, " + n.getExpression() + ", " + n.getExpression() + "+1" +  ", " + n.toString() + ")");
+				} else if (n.getOperator().asString().equals("--")) {
+					return parseExpression(".highlightUnaryExpression(" + arg.getIdOfNode(n) + ", true, " + n.getExpression() + ", " + n.getExpression() + "-1" +  ", " + n.toString() + ")");
+				}
+			} else { // isPrefix
+				if (n.getOperator().asString().equals("++")) {
+					return parseExpression(".highlightUnaryExpression(" + arg.getIdOfNode(n) + ", false, " + n.getExpression() + ", " + n.getExpression() + "+1" +  ", " + n.toString() + ")");
+				} else if (n.getOperator().asString().equals("--")) {
+					return parseExpression(".highlightUnaryExpression(" + arg.getIdOfNode(n) + ", false, " + n.getExpression() + ", " + n.getExpression() + "-1" +  ", " + n.toString() + ")");
+				} else if (n.getOperator().asString().equals("-")) {
+					return parseExpression(".highlightUnaryExpression(" + arg.getIdOfNode(n) + ", false, " + n.getExpression() + ", " + "-" + n.getExpression() +  ", " + n.toString() + ")");
+				} else if (n.getOperator().asString().equals("+")) {
+					return parseExpression(".highlightUnaryExpression(" + arg.getIdOfNode(n) + ", false, " + n.getExpression() + ", " + "+" + n.getExpression() +  ", " + n.toString() + ")");
+				}
 			}
 		}
+		
 		return super.visit(n, arg);
 	}
 	

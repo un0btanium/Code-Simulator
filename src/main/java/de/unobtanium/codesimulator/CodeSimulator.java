@@ -61,7 +61,7 @@ public class CodeSimulator {
     	}
     	
     	// SAVE DATA IN CodeData OBJECT
-    	codeData = new CodeData(sourceFiles, codeSnippets);
+    	codeData = new CodeData(sourceFiles, codeSnippets, data.getInt("highlightingDetailLevelIndex"));
     	
     	// if raw code cant be compiled exit program (errors are already saved as ErrorStep objects)
     	if (CodeExecuter.compileCode(codeData) == null) {

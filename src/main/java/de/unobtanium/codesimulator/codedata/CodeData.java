@@ -11,6 +11,8 @@ import com.github.javaparser.ast.Node;
 
 public class CodeData {
 	
+	public int highlightingDetailLevelIndex;
+	
 	public List<SourceFile> sourceFiles;
 	public Map<String, CodeSnippet> codeSnippets;
 	
@@ -19,9 +21,10 @@ public class CodeData {
 	
 	public HashMap<SourceFile, ArrayList<CodeSnippet>> codeSnippetsBySourceFiles;
 	
-	public CodeData(List<SourceFile> sourceFiles, Map<String, CodeSnippet> codeSnippets) {
+	public CodeData(List<SourceFile> sourceFiles, Map<String, CodeSnippet> codeSnippets, int highlightingDetailLevelIndex) {
 		this.sourceFiles = sourceFiles;
 		this.codeSnippets = codeSnippets;
+		this.highlightingDetailLevelIndex = highlightingDetailLevelIndex;
 		
 		nodesByID = new HashMap<>();
 		nodeIDcounter = 0;

@@ -134,10 +134,14 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
         	} else if (childString.equals("new Scanner(System.in)")) { // Todo check if type is a java.util.Scanner instead
         		if (n.getNameAsString().equals("nextLine")) {
         			insertStatements(n, arg, true, ".readLine(" + arg.getIdOfNodeOrAddNew(n) + ");");
+        		} else if (n.getNameAsString().equals("nextInt")) {
+        			insertStatements(n, arg, true, ".readLine(" + arg.getIdOfNodeOrAddNew(n) + ");");
+        		} else if (n.getNameAsString().equals("nextDouble")) {
+        			insertStatements(n, arg, true, ".readLine(" + arg.getIdOfNodeOrAddNew(n) + ");");
+        		} else if (n.getNameAsString().equals("nextFloat")) {
+        			insertStatements(n, arg, true, ".readLine(" + arg.getIdOfNodeOrAddNew(n) + ");");
         		}
-        		// TODO .nextInt()
-        		// TODO .nextDouble()
-        		// TODO .nextFloat()
+        		// TODO easter egg on 'input' input
         	}  else if (childString.equals("GUI")) {
         		// TODO highlight 
         		insertStatements(n, arg, true, ".highlight("+ arg.getIdOfNode(n) + ");"); // TODO highlight Method tooltip info

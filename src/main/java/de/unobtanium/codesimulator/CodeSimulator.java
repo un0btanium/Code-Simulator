@@ -114,6 +114,7 @@ public class CodeSimulator {
     	result.put("steps", steps);
     	result.put("node_data", nodeData);
     	result.put("isReadIn", isReadIn);
+    	result.put("isUsingMathRandom", StepExporter.isUsingMathRandom);
     	
 //    	String sourcecode = "";
 //    	for (SourceFile sourceFile : codeData.sourceFiles) {
@@ -133,6 +134,7 @@ public class CodeSimulator {
     	result.put("steps", steps);
     	result.put("node_data", nodeData);
     	result.put("isGuiReadIn", true);
+    	result.put("isUsingMathRandom", StepExporter.isUsingMathRandom);
     	
 
 //    	String sourcecode = "";

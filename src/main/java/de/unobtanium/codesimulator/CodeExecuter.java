@@ -1,8 +1,10 @@
 package de.unobtanium.codesimulator;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.tools.Diagnostic;
@@ -118,8 +120,18 @@ public class CodeExecuter {
 			Method mainMethod = mainClass.getMethod("main", new Class[] { String[].class });
 			mainMethod.invoke(null, new Object[] { new String[0] });
 			
-		} catch (Throwable e) { // TODO set error and export error
-			StepCollection.getInstance().showError(-2, e.toString());
+		} catch (InvocationTargetException e) { // TODO set error and export error
+			StringBuffer sb = new StringBuffer();
+			sb.append(e.getCause().toString());
+			sb.append("\n");
+			//TODO lines extracten
+			for (StackTraceElement ste : e.getCause().getStackTrace()) {
+				sb.append(ste.toString());
+				sb.append("\n");
+			}
+			StepCollection.getInstance().showError(-2, e.getCause() == null ? "null" : sb.toString());
+		} catch(Throwable e) {
+			StepCollection.getInstance().showError(-2, e.getCause() == null ? "null" : e.getStackTrace().toString());
 		}
 	}
 	

@@ -7,6 +7,8 @@ import de.unobtanium.codesimulator.steps.Step;
 import de.unobtanium.codesimulator.steps.StepCollection;
 
 public class StepExporter {
+	
+	public static boolean isUsingMathRandom = false;
 
 	public static JSONArray export() {
 		
@@ -28,8 +30,13 @@ public class StepExporter {
 			// mark read command as already executed
 			if (jsonObj.getString("type").equals("readString")) {
 				if (i != size) {
-					jsonObj.put("done", true);
+					jsonObj.put("done", true); // TODO cleanup: just use the last step
 				}
+			}
+			
+			
+			if (jsonObj.getString("type").equals("random")) {
+				isUsingMathRandom = true;
 			}
 			
 			jsonArray.put(jsonObj);
@@ -39,5 +46,7 @@ public class StepExporter {
 		return jsonArray;
 		
 	}
+	
+	
 	
 }

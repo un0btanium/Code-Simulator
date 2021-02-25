@@ -145,6 +145,17 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
         	}  else if (childString.equals("GUI")) {
         		// TODO highlight 
         		insertStatements(n, arg, true, ".highlight("+ arg.getIdOfNode(n) + ");"); // TODO highlight Method tooltip info
+        	} else if (childString.equals("Math")) {
+        		if (arg.highlightingDetailLevelIndex >= VERYLOW) {
+	        		if (n.getNameAsString().equals("random")) {
+	            		return parseExpression(".random(" + arg.getIdOfNode(n) + ", Math.random())");
+	        		} else {
+	            		if (arg.getIdOfNode(n) == -1) {
+	            			return super.visit(n, arg);
+	            		}
+	            		insertStatements(n, arg, true, ".highlight("+ arg.getIdOfNode(n) + ");"); // TODO highlight Method tooltip info
+	        		}
+        		}
         	} else {
         		if (arg.getIdOfNode(n) == -1) {
         			return super.visit(n, arg);

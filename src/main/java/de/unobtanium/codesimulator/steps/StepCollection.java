@@ -329,6 +329,12 @@ public class StepCollection {
 	public void initializePrimitiveVariable(int id, String variableName, String variableType, String value) {
 		steps.add(new InitializePrimitiveVariable(id, getTime(), variableName, variableType, value));
 	}
+	
+	
+	public double random(int id, double randomNumber) {
+		steps.add(new RandomNumber(id, getTime(), randomNumber));
+		return randomNumber;
+	}
 
 	public void addEmptyStep() {
 		steps.add(new EmptyStep());

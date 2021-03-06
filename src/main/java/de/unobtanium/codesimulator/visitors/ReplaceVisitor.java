@@ -79,7 +79,7 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 		int i = ((isPlacedBeforeNode) ? 0 : 1) + offset.get(blockStmtID);
 		for (String statement : statements) {
 			if (statement.startsWith(".")) {
-				blockStmt.addStatement(index+i++, StaticJavaParser.parseStatement("de.unobtanium.codesimulator.steps.StepCollection.getInstance()" + statement));
+				blockStmt.addStatement(index+i++, StaticJavaParser.parseStatement("StepCollection.getInstance()" + statement));
 			} else {
 				blockStmt.addStatement(index+i++, StaticJavaParser.parseStatement(statement));
 			}
@@ -89,7 +89,7 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
 	
 	private Expression parseExpression(String expression) {
 		if (expression.startsWith(".")) {
-			return StaticJavaParser.parseExpression("de.unobtanium.codesimulator.steps.StepCollection.getInstance()" + expression);
+			return StaticJavaParser.parseExpression("StepCollection.getInstance()" + expression);
 		} else {
 			return StaticJavaParser.parseExpression(expression);
 		}
@@ -105,7 +105,7 @@ public class ReplaceVisitor extends ModifierVisitor<CodeData> {
         if (children.size() > 0) {
         	String childString = children.get(0).toString();
         	
-        	if (childString.equals("de.unobtanium.codesimulator.steps.StepCollection")) {
+        	if (childString.equals("StepCollection")) {
         		return n;
         	}
         	

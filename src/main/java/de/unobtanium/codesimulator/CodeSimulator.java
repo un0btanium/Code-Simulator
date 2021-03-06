@@ -8,10 +8,11 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.github.javaparser.ast.ImportDeclaration;
+
 import de.unobtanium.codesimulator.codedata.CodeData;
 import de.unobtanium.codesimulator.codedata.CodeSnippet;
 import de.unobtanium.codesimulator.codedata.SourceFile;
-import de.unobtanium.codesimulator.compilerapi.MemoryClassLoader;
 import de.unobtanium.codesimulator.exporter.NodeExporter;
 import de.unobtanium.codesimulator.exporter.StepExporter;
 import de.unobtanium.codesimulator.steps.StepCollection;
@@ -75,6 +76,21 @@ public class CodeSimulator {
     	// TODO if not explore 
 
     	codeData.parseSourceFilesWithJavaParser();
+
+    	// add StepCollection import to each source file
+    	String importStr = "de.unobtanium.codesimulator.steps.StepCollection";
+    	for (SourceFile sourceFile : sourceFiles) {
+    		boolean hasImport = false;
+    		for (ImportDeclaration id : sourceFile.cu.getImports()) {
+    			if (id.getName().asString().equals(importStr)) {
+    				hasImport = true;
+    				break;
+    			}
+    		}
+    		if (!hasImport) {
+    			sourceFile.cu.addImport(importStr);
+    		}
+    	}
     	
     	// REGISTER NODES, GIVE THEM UNIQUE IDs AND SAVE THEIR POSITION DATA
     	for (SourceFile sourceFile : sourceFiles) {

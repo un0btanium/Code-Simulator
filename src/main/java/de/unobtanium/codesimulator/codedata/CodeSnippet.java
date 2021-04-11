@@ -12,7 +12,7 @@ public class CodeSnippet {
 	
 	public CodeSnippet(String identifier, String code) {
 		this.identifier = identifier;
-		this.replacementCode = code;
+		this.replacementCode = code.stripTrailing();
 		lines = replacementCode.lines().toArray().length-1;
 	}
 	
